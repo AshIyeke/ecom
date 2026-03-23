@@ -25,7 +25,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     const getUser = async () => {
-      const { data: { user } } = await supabase.auth.getUser();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
       setUser(user);
       setRole(user?.app_metadata?.role || null);
       setLoading(false);
@@ -33,7 +35,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     getUser();
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
       const currentUser = session?.user ?? null;
       setUser(currentUser);
       setRole(currentUser?.app_metadata?.role || null);
@@ -53,7 +57,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     });
 
     if (error) return { error: error.message };
-    
+
     router.push("/login?message=Check your email to confirm your account");
     return {};
   };
@@ -82,11 +86,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     await supabase.auth.signOut();
     setUser(null);
     setRole(null);
-    router.push("/login");
+    router.push("/");
   };
 
   return (
-    <AuthContext.Provider value={{ user, role, loading, signIn, signUp, signOut }}>
+    <AuthContext.Provider
+      value={{ user, role, loading, signIn, signUp, signOut }}
+    >
       {children}
     </AuthContext.Provider>
   );
