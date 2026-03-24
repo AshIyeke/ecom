@@ -1,9 +1,10 @@
-import { useGetCartQuery, useAddToCartMutation, useRemoveFromCartMutation } from './api/cartApi'
+import { useGetCartQuery, useAddToCartMutation, useRemoveFromCartMutation, useUpdateCartQuantityMutation } from './api/cartApi'
 
 export const useCart = () => {
   const { data: cart, isLoading, error } = useGetCartQuery()
   const [addToCart] = useAddToCartMutation()
   const [removeFromCart] = useRemoveFromCartMutation()
+  const [updateQuantityMutation] = useUpdateCartQuantityMutation()
 
   if (error) {
     console.log("Error from useGetCartQuery in useCart hook:", error)
@@ -28,6 +29,14 @@ export const useCart = () => {
         await removeFromCart(id).unwrap()
       } catch (err) {
         console.log("Error removing from cart in useCart hook:", err)
+      }
+    },
+    updateQuantity: async (itemId: string, quantity: number) => {
+      if (quantity < 1) return
+      try {
+        await updateQuantityMutation({ itemId, quantity }).unwrap()
+      } catch (err) {
+        console.log("Error updating quantity in useCart hook:", err)
       }
     },
   }

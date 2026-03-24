@@ -120,7 +120,25 @@ export const cartApi = createApi({
           console.log("Error removing from cart in cartApi:", error)
           return { error }
         }
-        return { data: undefined }
+        return { data: null as any }
+      },
+      invalidatesTags: ['Cart'],
+    }),
+    updateCartQuantity: builder.mutation<any, { itemId: string; quantity: number }>({
+      queryFn: async ({ itemId, quantity }) => {
+        const supabase = createClient()
+        const { data, error } = await supabase
+          .from('cart_items')
+          .update({ quantity })
+          .eq('id', itemId)
+          .select()
+          .single()
+        
+        if (error) {
+          console.log("Error updating cart quantity in cartApi:", error)
+          return { error }
+        }
+        return { data }
       },
       invalidatesTags: ['Cart'],
     }),
@@ -130,5 +148,6 @@ export const cartApi = createApi({
 export const { 
   useGetCartQuery, 
   useAddToCartMutation, 
-  useRemoveFromCartMutation 
+  useRemoveFromCartMutation,
+  useUpdateCartQuantityMutation
 } = cartApi
