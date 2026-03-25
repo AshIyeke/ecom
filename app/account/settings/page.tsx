@@ -1,7 +1,6 @@
 "use client"
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Switch } from "@/components/ui/button" // Assuming standard button or similar for now if switch is missing
 
 export default function SettingsPage() {
   return (
