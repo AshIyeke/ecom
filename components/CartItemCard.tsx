@@ -5,18 +5,10 @@ import Image from "next/image";
 import Link from "next/link";
 import { Minus, Plus, Trash2 } from "lucide-react";
 import { useCart } from "@/store/useCart";
+import { CartItem } from "@/types/cart";
 
 interface CartItemCardProps {
-  item: {
-    id: string;
-    quantity: number;
-    products: {
-      id: string;
-      name: string;
-      price: number;
-      image_url: string;
-    };
-  };
+  item: CartItem;
 }
 
 export default function CartItemCard({ item }: CartItemCardProps) {

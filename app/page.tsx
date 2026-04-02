@@ -3,6 +3,8 @@ import FragranceShowcase from "@/components/FragranceShowcase";
 import WhyChooseUs from "@/components/WhyChooseUs";
 
 export default function Home() {
+  
+  
   return (
     <div className="min-h-screen bg-zinc-50 dark:bg-zinc-950">
       <Hero />

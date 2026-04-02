@@ -4,15 +4,7 @@ import React, { createContext, useContext, useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { User } from "@supabase/supabase-js";
 import { useRouter } from "next/navigation";
-
-interface AuthContextType {
-  user: User | null;
-  role: string | null;
-  loading: boolean;
-  signIn: (formData: FormData) => Promise<{ error?: string }>;
-  signUp: (formData: FormData) => Promise<{ error?: string }>;
-  signOut: () => Promise<void>;
-}
+import { AuthContextType } from "@/types/auth";
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
@@ -29,7 +21,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         data: { user },
       } = await supabase.auth.getUser();
       setUser(user);
-      setRole(user?.app_metadata?.role || null);
+      setRole(user?.app_metadata?.user_role || null);
       setLoading(false);
     };
 

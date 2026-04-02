@@ -4,15 +4,7 @@ import Image from "next/image";
 import { ShoppingCart, Star } from "lucide-react";
 import { useCart } from "@/store/useCart";
 import Link from "next/link";
-
-export interface Product {
-  id: string;
-  name: string;
-  price: number;
-  image: string;
-  category: string;
-  rating: number;
-}
+import { Product } from "@/types/product";
 
 interface ProductCardProps {
   product: Product;

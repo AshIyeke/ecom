@@ -3,11 +3,7 @@
 import { useState, useEffect } from "react";
 import { addProduct, getCategories } from "@/app/shop/actions";
 import { Upload, Loader2, Plus, AlertCircle } from "lucide-react";
-
-interface Category {
-  id: string;
-  name: string;
-}
+import { Category } from "@/types/product";
 
 export default function AddProductForm() {
   const [categories, setCategories] = useState<Category[]>([]);

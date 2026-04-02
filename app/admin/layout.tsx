@@ -1,13 +1,16 @@
 "use client";
 
 import { useAuth } from "@/store/AuthContext";
-import { useRouter } from "next/navigation";
-import Link from "next/link";
+import { useRouter, usePathname } from "next/navigation";
 import { useEffect } from "react";
+import { SidebarProvider, SidebarInset, SidebarTrigger } from "@/components/ui/sidebar";
+import { AdminSidebar } from "@/components/admin-sidebar";
+import { Separator } from "@/components/ui/separator";
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
-  const { user, role, loading, signOut } = useAuth();
+  const { role, loading } = useAuth();
   const router = useRouter();
+  const pathname = usePathname();
 
   useEffect(() => {
     if (!loading && role !== "admin") {
@@ -27,23 +30,29 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     return null;
   }
 
+  const getPageTitle = () => {
+    if (pathname === "/admin") return "Dashboard";
+    if (pathname.startsWith("/admin/products")) return "Products";
+    if (pathname.startsWith("/admin/orders")) return "Orders";
+    if (pathname.startsWith("/admin/settings")) return "Settings";
+    return "Admin Panel";
+  };
+
   return (
-    <div className="flex h-screen">
-      <aside className="w-64 bg-gray-900 text-white p-6 flex flex-col justify-between">
-        <nav>
-          <h2 className="text-xl font-bold mb-6">Admin Panel</h2>
-          <Link href="/admin/products" className="block py-2 hover:text-gray-300">Products</Link>
-          <Link href="/admin/orders" className="block py-2 hover:text-gray-300">Orders</Link>
-        </nav>
-        
-        <button 
-          onClick={() => signOut()}
-          className="w-full text-left py-2 text-red-400 hover:text-red-300 transition-colors"
-        >
-          Logout
-        </button>
-      </aside>
-      <main className="flex-1 p-8 overflow-auto">{children}</main>
-    </div>
+    <SidebarProvider>
+      <AdminSidebar />
+      <SidebarInset>
+        <header className="flex h-16 shrink-0 items-center gap-2 border-b px-4">
+          <SidebarTrigger className="-ml-1" />
+          <Separator orientation="vertical" className="mr-2 h-4" />
+          <div className="flex flex-1 items-center justify-between">
+            <h1 className="text-lg font-semibold">{getPageTitle()}</h1>
+          </div>
+        </header>
+        <main className="flex-1 overflow-auto p-4 md:p-6">
+          {children}
+        </main>
+      </SidebarInset>
+    </SidebarProvider>
   );
 }
