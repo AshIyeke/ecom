@@ -56,7 +56,7 @@ export default function ProductCard({ product }: ProductCardProps) {
         
         <div className="flex items-center justify-between pt-2">
           <p className="text-lg font-bold text-zinc-900 dark:text-zinc-50">
-            ${product.price.toFixed(2)}
+            ${(product.price || 0).toFixed(2)}
           </p>
           <button 
             onClick={() => addItem(product)}

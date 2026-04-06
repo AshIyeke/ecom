@@ -211,7 +211,7 @@ export default function AdminProductList() {
                       </span>
                     </td>
                     <td className="py-4 px-3 font-bold text-zinc-900 dark:text-zinc-50 text-sm">
-                      ${product.price.toFixed(2)}
+                      ${(product.price || 0).toFixed(2)}
                     </td>
                     <td className="py-4 px-3">
                       <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-[9px] font-black uppercase tracking-tighter ${
@@ -275,7 +275,7 @@ export default function AdminProductList() {
                     <p className="text-xs text-zinc-500">{product.categories?.name || "Uncategorized"}</p>
                     <div className="flex items-center gap-2 mt-1">
                       <span className="text-sm font-black text-zinc-900 dark:text-zinc-50">
-                        ${product.price.toFixed(2)}
+                        ${(product.price || 0).toFixed(2)}
                       </span>
                       <span className={`inline-flex items-center px-1.5 py-0.5 rounded-full text-[8px] font-black uppercase tracking-tighter ${
                         product.is_published 

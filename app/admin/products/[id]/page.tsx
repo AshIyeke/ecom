@@ -137,7 +137,7 @@ export default function AdminProductDetailsPage() {
               <CardContent className="space-y-4">
                 <div className="flex justify-between items-center text-sm">
                   <span className="text-zinc-500">Price</span>
-                  <span className="font-bold text-zinc-900 dark:text-zinc-50">${product.price.toFixed(2)}</span>
+                  <span className="font-bold text-zinc-900 dark:text-zinc-50">${(product.price || 0).toFixed(2)}</span>
                 </div>
                 <Separator className="bg-zinc-100 dark:bg-zinc-800" />
                 <div className="flex justify-between items-center text-sm">

@@ -79,7 +79,7 @@ export default async function ProductDetailPage({
           
           <div className="space-y-4">
             <p className="text-4xl font-bold text-zinc-900 dark:text-zinc-50">
-              ${product.price.toFixed(2)}
+              ${(product.price || 0).toFixed(2)}
             </p>
             
             <div className="prose prose-zinc dark:prose-invert max-w-none">

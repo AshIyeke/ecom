@@ -80,11 +80,11 @@ export default function CartItemCard({ item }: CartItemCardProps) {
       {/* Price */}
       <div className="text-right flex-shrink-0">
         <p className="text-sm font-bold text-zinc-900 dark:text-zinc-50">
-          ${(product.price * item.quantity).toFixed(2)}
+          ${((product.price || 0) * item.quantity).toFixed(2)}
         </p>
         {item.quantity > 1 && (
           <p className="text-[10px] text-zinc-500 dark:text-zinc-400 mt-1">
-            ${product.price.toFixed(2)} each
+            ${(product.price || 0).toFixed(2)} each
           </p>
         )}
       </div>

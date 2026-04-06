@@ -77,13 +77,13 @@ export default function CartContainer({ children }: CartContainerProps) {
             <div className="flex justify-between text-sm">
               <span className="text-zinc-500 dark:text-zinc-400">Subtotal</span>
               <span className="font-bold text-zinc-900 dark:text-zinc-50">
-                ${subtotal.toFixed(2)}
+                ${(subtotal || 0).toFixed(2)}
               </span>
             </div>
             <div className="flex justify-between text-sm">
               <span className="text-zinc-500 dark:text-zinc-400">Shipping</span>
               <span className="font-bold text-zinc-900 dark:text-zinc-50">
-                ${shipping.toFixed(2)}
+                ${(shipping || 0).toFixed(2)}
               </span>
             </div>
             <div className="pt-4 border-t border-zinc-100 dark:border-zinc-800 flex justify-between">
@@ -91,7 +91,7 @@ export default function CartContainer({ children }: CartContainerProps) {
                 Total
               </span>
               <span className="text-lg font-bold text-zinc-900 dark:text-zinc-50">
-                ${total.toFixed(2)}
+                ${(total || 0).toFixed(2)}
               </span>
             </div>
           </div>
