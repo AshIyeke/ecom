@@ -4,10 +4,10 @@ import Image from "next/image";
 import { ShoppingCart, Star } from "lucide-react";
 import { useCart } from "@/store/useCart";
 import Link from "next/link";
-import { Product } from "@/types/product";
+import { ProductCardType } from "@/types/product";
 
 interface ProductCardProps {
-  product: Product;
+  product: ProductCardType;
 }
 
 export default function ProductCard({ product }: ProductCardProps) {

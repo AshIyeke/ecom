@@ -1,4 +1,4 @@
-import { getProductById } from "@/lib/supabase/queries/products";
+import { getProduct } from "@/lib/supabase/queries/products";
 import Image from "next/image";
 import { Star, ArrowLeft } from "lucide-react";
 import Link from "next/link";
@@ -15,7 +15,7 @@ export default async function ProductDetailPage({
   // Use slug as ID for fetching data
   let product;
   try {
-    product = await getProductById(slug);
+    product = await getProduct(slug);
   } catch (error) {
     console.error("Error loading product:", error);
     return notFound();

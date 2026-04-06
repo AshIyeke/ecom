@@ -40,7 +40,7 @@ export async function POST(req: Request) {
       .from('orders')
       .update({ 
         status: 'paid',
-        stripe_payment_intent_id: reference // Make sure this column exists in your DB!
+        paystack_id: reference // Make sure this column exists in your DB!
       })
       .eq('id', orderId)
       .select();

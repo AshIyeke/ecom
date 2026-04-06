@@ -1,41 +1,19 @@
 import { createApi, fakeBaseQuery } from '@reduxjs/toolkit/query/react'
-import { createClient } from '@/lib/supabase/client'
+import { getProducts, getProduct, createProduct, uploadProductImage, updateProduct, deleteProduct } from '@/lib/supabase/queries/products'
 
 export const productApi = createApi({
   reducerPath: 'productApi',
   baseQuery: fakeBaseQuery(),
   tagTypes: ['Product'],
   endpoints: (builder) => ({
-    getProducts: builder.query<{ products: any[]; count: number }, { category?: string; search?: string; page?: number; limit?: number } | void>({
+    getProducts: builder.query<{ products: any[]; count: number }, { category?: string; search?: string; page?: number; limit?: number; isPublished?: boolean | null; isAdmin?: boolean; stockStatus?: "all" | "low" | "out" } | void>({
       queryFn: async (arg) => {
-        const { category, search, page = 1, limit = 8 } = arg || {}
-        const supabase = createClient()
-        
-        const from = (page - 1) * limit
-        const to = from + limit - 1
-
-        let query = supabase
-          .from('products')
-          .select('*, categories(name)', { count: 'exact' })
-          .eq('is_published', true)
-
-        if (category) {
-          query = query.eq('category_id', category)
+        try {
+          const data = await getProducts(arg || {})
+          return { data }
+        } catch (error: any) {
+          return { error: { status: 500, data: error.message } }
         }
-
-        if (search) {
-          query = query.ilike('name', `%${search}%`)
-        }
-
-        const { data, error, count } = await query
-          .order('created_at', { ascending: false })
-          .range(from, to)
-        
-        if (error) {
-          console.log("Error fetching products in productApi:", error)
-          return { error }
-        }
-        return { data: { products: data || [], count: count || 0 } }
       },
       providesTags: (result) =>
         result
@@ -47,22 +25,82 @@ export const productApi = createApi({
     }),
     getProduct: builder.query<any, string>({
       queryFn: async (id) => {
-        const supabase = createClient()
-        const { data, error } = await supabase
-          .from('products')
-          .select('*, categories(name)')
-          .eq('id', id)
-          .single()
-        
-        if (error) {
-          console.log("Error fetching product in productApi:", error)
-          return { error }
+        try {
+          const data = await getProduct(id)
+          return { data }
+        } catch (error: any) {
+          return { error: { status: 500, data: error.message } }
         }
-        return { data }
       },
       providesTags: (result, error, id) => [{ type: 'Product', id }],
+    }),
+    addProduct: builder.mutation<any, {
+      name: string;
+      description?: string;
+      price: number;
+      category_id: string;
+      image: File;
+      is_published?: boolean;
+      stock: number;
+    }>({
+      queryFn: async ({ image, ...productData }) => {
+        try {
+          const image_url = await uploadProductImage(image);
+          const data = await createProduct({
+            ...productData,
+            image_url,
+          });
+          return { data };
+        } catch (error: any) {
+          return { error: { status: 500, data: error.message } };
+        }
+      },
+      invalidatesTags: [{ type: 'Product', id: 'LIST' }],
+    }),
+    updateProduct: builder.mutation<any, {
+      id: string;
+      productData: {
+        name?: string;
+        description?: string;
+        price?: number;
+        category_id?: string;
+        image?: File;
+        is_published?: boolean;
+        stock?: number;
+      };
+    }>({
+      queryFn: async ({ id, productData: { image, ...rest } }) => {
+        try {
+          let image_url = undefined;
+          if (image) {
+            image_url = await uploadProductImage(image);
+          }
+          const data = await updateProduct(id, {
+            ...rest,
+            ...(image_url && { image_url }),
+          });
+          return { data };
+        } catch (error: any) {
+          return { error: { status: 500, data: error.message } };
+        }
+      },
+      invalidatesTags: (result, error, { id }) => [
+        { type: 'Product', id },
+        { type: 'Product', id: 'LIST' }
+      ],
+    }),
+    deleteProduct: builder.mutation<any, string>({
+      queryFn: async (id) => {
+        try {
+          const data = await deleteProduct(id);
+          return { data };
+        } catch (error: any) {
+          return { error: { status: 500, data: error.message } };
+        }
+      },
+      invalidatesTags: [{ type: 'Product', id: 'LIST' }],
     }),
   }),
 })
 
-export const { useGetProductsQuery, useGetProductQuery } = productApi
+export const { useGetProductsQuery, useGetProductQuery, useAddProductMutation, useUpdateProductMutation, useDeleteProductMutation } = productApi

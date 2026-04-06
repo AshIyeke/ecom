@@ -10,7 +10,7 @@ export default function AdminSettingsPage() {
         <h2 className="text-2xl font-bold">Admin Settings</h2>
       </div>
       
-      <div className="grid gap-6">
+      <div className="grid gap-6 lg:grid-cols-2">
         <Card>
           <CardHeader>
             <CardTitle>Store Information</CardTitle>
@@ -35,18 +35,18 @@ export default function AdminSettingsPage() {
           <CardContent className="space-y-4">
             <div className="flex items-center justify-between">
               <div>
-                <p className="font-medium">Order Notifications</p>
-                <p className="text-sm text-muted-foreground">Receive email for every new order.</p>
+                <p className="font-medium text-sm sm:text-base">Order Notifications</p>
+                <p className="text-xs sm:text-sm text-muted-foreground">Receive email for every new order.</p>
               </div>
-              <Button variant="outline">Enabled</Button>
+              <Button variant="outline" size="sm">Enabled</Button>
             </div>
             <Separator />
             <div className="flex items-center justify-between">
               <div>
-                <p className="font-medium">Inventory Alerts</p>
-                <p className="text-sm text-muted-foreground">Notify when products are low on stock.</p>
+                <p className="font-medium text-sm sm:text-base">Inventory Alerts</p>
+                <p className="text-xs sm:text-sm text-muted-foreground">Notify when products are low on stock.</p>
               </div>
-              <Button variant="outline">Enabled</Button>
+              <Button variant="outline" size="sm">Enabled</Button>
             </div>
           </CardContent>
         </Card>

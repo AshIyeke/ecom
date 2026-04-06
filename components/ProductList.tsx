@@ -45,22 +45,22 @@ export default function ProductList({
               setSelectedCategory("");
               setCurrentPage(1);
             }}
-            className={`px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-widest transition-all ${
+            className={`px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-widest transition-all cursor-pointer ${
               selectedCategory === ""
                 ? "bg-zinc-900 text-white dark:bg-zinc-50 dark:text-zinc-900 shadow-md"
                 : "bg-zinc-100 text-zinc-500 hover:bg-zinc-200 dark:bg-zinc-800 dark:text-zinc-400 dark:hover:bg-zinc-700"
             }`}
-          >
+            >
             All Collections
-          </button>
-          {categories.map((category) => (
+            </button>
+            {categories.map((category) => (
             <button
               key={category.id}
               onClick={() => {
                 setSelectedCategory(category.id);
                 setCurrentPage(1);
               }}
-              className={`px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-widest transition-all ${
+              className={`px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-widest transition-all cursor-pointer ${
                 selectedCategory === category.id
                   ? "bg-zinc-900 text-white dark:bg-zinc-50 dark:text-zinc-900 shadow-md"
                   : "bg-zinc-100 text-zinc-500 hover:bg-zinc-200 dark:bg-zinc-800 dark:text-zinc-400 dark:hover:bg-zinc-700"

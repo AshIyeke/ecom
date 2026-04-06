@@ -21,7 +21,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         data: { user },
       } = await supabase.auth.getUser();
       setUser(user);
-      setRole(user?.app_metadata?.user_role || null);
+      setRole(user?.app_metadata?.role || user?.app_metadata?.user_role || null);
       setLoading(false);
     };
 
@@ -32,7 +32,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     } = supabase.auth.onAuthStateChange((_event, session) => {
       const currentUser = session?.user ?? null;
       setUser(currentUser);
-      setRole(currentUser?.app_metadata?.role || null);
+      setRole(currentUser?.app_metadata?.role || currentUser?.app_metadata?.user_role || null);
       setLoading(false);
     });
 
