@@ -20,70 +20,70 @@ export default function Navbar() {
   const itemCount = items.reduce((acc: number, item: any) => acc + item.quantity, 0);
 
   return (
-    <nav className="w-full bg-[#F9F8F6] border-b border-gray-100 sticky top-0 z-50">
+    <nav className="w-full bg-background/80 backdrop-blur-md border-b border-border sticky top-0 z-50 transition-all">
       <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between relative">
         {/* Left Side: Branding */}
         <Link href="/" className="flex flex-col items-start cursor-pointer group z-10">
-          <h1 className="text-2xl sm:text-3xl font-serif tracking-[0.2em] font-light text-gray-900 leading-tight group-hover:opacity-80 transition-opacity">SOAR</h1>
-          <span className="text-[8px] sm:text-[10px] tracking-[0.4em] font-medium text-gray-500 -mt-1 group-hover:opacity-80 transition-opacity">FRAGRANCE</span>
+          <h1 className="text-xl sm:text-2xl font-serif tracking-[0.3em] font-light text-foreground leading-tight group-hover:opacity-80 transition-opacity uppercase">Opal Scents</h1>
+          <span className="text-[7px] sm:text-[9px] tracking-[0.5em] font-black text-muted-foreground -mt-0.5 group-hover:opacity-80 transition-opacity uppercase opacity-70">Signature Fragrance</span>
         </Link>
 
         {/* Center: Navigation Links (Desktop Only) */}
-        <div className="hidden lg:flex items-center space-x-8 absolute left-1/2 -translate-x-1/2">
-          <Link href="/shop" className="text-[10px] font-bold uppercase tracking-widest text-zinc-500 hover:text-zinc-900 transition-colors">Shop</Link>
-          <Link href="#" className="text-[10px] font-bold uppercase tracking-widest text-zinc-500 hover:text-zinc-900 transition-colors">Story</Link>
-          <Link href="#" className="text-[10px] font-bold uppercase tracking-widest text-zinc-500 hover:text-zinc-900 transition-colors">Contact</Link>
+        <div className="hidden lg:flex items-center space-x-10 absolute left-1/2 -translate-x-1/2">
+          <Link href="/shop" className="text-[11px] font-black uppercase tracking-[0.2em] text-muted-foreground hover:text-foreground transition-colors">Shop</Link>
+          <Link href="#" className="text-[11px] font-black uppercase tracking-[0.2em] text-muted-foreground hover:text-foreground transition-colors">Story</Link>
+          <Link href="#" className="text-[11px] font-black uppercase tracking-[0.2em] text-muted-foreground hover:text-foreground transition-colors">Contact</Link>
         </div>
 
         {/* Right Side: Icons, Auth & Mobile Menu */}
-        <div className="flex items-center space-x-2 lg:space-x-4 z-10">
+        <div className="flex items-center space-x-1 lg:space-x-3 z-10">
           {user ? (
-            <div className="flex items-center space-x-2">
+            <div className="flex items-center space-x-1">
               <Link 
                 href={role === "admin" ? "/admin" : "/account"} 
-                className="p-2 hover:bg-gray-200 rounded-full transition-colors text-gray-700"
+                className="p-2.5 hover:bg-secondary rounded-full transition-colors text-foreground/80 hover:text-foreground"
                 title={role === "admin" ? "Admin Panel" : "My Account"}
               >
-                <User size={20} strokeWidth={1.5} />
+                <User size={19} strokeWidth={1.5} />
               </Link>
               <button 
                 onClick={() => signOut()}
-                className="p-2 hover:bg-gray-200 rounded-full transition-colors text-gray-700"
+                className="p-2.5 hover:bg-secondary rounded-full transition-colors text-foreground/80 hover:text-foreground"
                 title="Sign Out"
               >
-                <LogOut size={20} strokeWidth={1.5} />
+                <LogOut size={19} strokeWidth={1.5} />
               </button>
             </div>
           ) : (
-            <div className="hidden sm:flex items-center space-x-2">
+            <div className="hidden sm:flex items-center space-x-2 mr-2">
               <Link 
                 href="/login" 
-                className="text-xs font-semibold uppercase tracking-widest text-zinc-600 hover:text-zinc-900 px-3 py-2 transition-colors"
+                className="text-[11px] font-black uppercase tracking-widest text-muted-foreground hover:text-foreground px-4 py-2 transition-colors"
               >
                 Login
               </Link>
               <Link 
                 href="/signup" 
-                className="text-[10px] font-bold uppercase tracking-widest bg-zinc-900 text-white px-4 py-2 rounded-full hover:bg-zinc-800 transition-colors"
+                className="text-[10px] font-black uppercase tracking-widest bg-primary text-primary-foreground px-5 py-2.5 rounded-full hover:opacity-90 transition-all shadow-sm active:scale-[0.98]"
               >
                 Join
               </Link>
             </div>
           )}
 
-          <Link href="/cart" className="p-2 hover:bg-gray-200 rounded-full transition-colors text-gray-700 relative">
-            <ShoppingBag size={20} strokeWidth={1.5} />
+          <Link href="/cart" className="p-2.5 hover:bg-secondary rounded-full transition-colors text-foreground/80 hover:text-foreground relative">
+            <ShoppingBag size={19} strokeWidth={1.5} />
             {itemCount > 0 && (
-              <span className="absolute top-1 right-1 bg-red-500 text-white text-[8px] w-3.5 h-3.5 flex items-center justify-center rounded-full border border-white">
+              <span className="absolute top-1.5 right-1.5 bg-primary text-primary-foreground text-[8px] font-bold w-4 h-4 flex items-center justify-center rounded-full border-2 border-background animate-in zoom-in duration-300">
                 {itemCount}
               </span>
             )}
           </Link>
 
-          {/* Mobile Menu Toggle - Only visible on mobile/tablet */}
+          {/* Mobile Menu Toggle */}
           <button 
             onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className="p-2 hover:bg-gray-200 rounded-full transition-colors lg:hidden text-gray-700"
+            className="p-2.5 hover:bg-secondary rounded-full transition-colors lg:hidden text-foreground/80 hover:text-foreground ml-1"
           >
             {isMenuOpen ? <X size={20} strokeWidth={1.5} /> : <Menu size={20} strokeWidth={1.5} />}
           </button>
@@ -92,31 +92,62 @@ export default function Navbar() {
 
       {/* Mobile Drawer Menu */}
       {isMenuOpen && (
-        <div className="lg:hidden absolute top-20 left-0 w-full bg-[#F9F8F6] shadow-xl border-t border-gray-100 p-6 flex flex-col space-y-4 animate-in slide-in-from-top-2 duration-200">
-          <Link href="/shop" onClick={() => setIsMenuOpen(false)} className="text-lg font-medium text-gray-800 border-b border-gray-100 pb-2">Shop</Link>
-          <Link href="#" onClick={() => setIsMenuOpen(false)} className="text-lg font-medium text-gray-800 border-b border-gray-100 pb-2">Story</Link>
-          <Link href="#" onClick={() => setIsMenuOpen(false)} className="text-lg font-medium text-gray-800 border-b border-gray-100 pb-2">Contact</Link>
+        <div className="lg:hidden absolute top-20 left-0 w-full bg-background shadow-2xl border-t border-border p-8 flex flex-col space-y-6 animate-in slide-in-from-top-4 duration-300">
+          <Link href="/shop" onClick={() => setIsMenuOpen(false)} className="text-2xl font-serif tracking-tight text-foreground border-b border-border pb-4 flex justify-between items-center group">
+            Shop <ChevronRight size={20} className="text-muted-foreground group-hover:translate-x-1 transition-transform" />
+          </Link>
+          <Link href="#" onClick={() => setIsMenuOpen(false)} className="text-2xl font-serif tracking-tight text-foreground border-b border-border pb-4 flex justify-between items-center group">
+            Story <ChevronRight size={20} className="text-muted-foreground group-hover:translate-x-1 transition-transform" />
+          </Link>
+          <Link href="#" onClick={() => setIsMenuOpen(false)} className="text-2xl font-serif tracking-tight text-foreground border-b border-border pb-4 flex justify-between items-center group">
+            Contact <ChevronRight size={20} className="text-muted-foreground group-hover:translate-x-1 transition-transform" />
+          </Link>
+          
           {user ? (
-            <div className="pt-4 flex flex-col space-y-2">
+            <div className="pt-6 flex flex-col space-y-3">
+              <Link href="/account" onClick={() => setIsMenuOpen(false)} className="flex items-center justify-center space-x-2 text-sm font-bold uppercase tracking-widest text-foreground bg-secondary p-4 rounded-2xl">
+                <User size={18} />
+                <span>My Account</span>
+              </Link>
               <button 
                 onClick={() => {
                   signOut();
                   setIsMenuOpen(false);
                 }} 
-                className="flex items-center justify-center space-x-2 text-lg font-bold text-white bg-zinc-900 p-3 rounded-lg text-center"
+                className="flex items-center justify-center space-x-2 text-sm font-bold uppercase tracking-widest text-primary-foreground bg-primary p-4 rounded-2xl"
               >
-                <LogOut size={20} strokeWidth={2} />
+                <LogOut size={18} />
                 <span>Sign Out</span>
               </button>
             </div>
           ) : (
-            <div className="pt-4 flex flex-col space-y-2">
-              <Link href="/login" onClick={() => setIsMenuOpen(false)} className="text-lg font-medium text-zinc-900 bg-zinc-100 p-3 rounded-lg text-center">Login</Link>
-              <Link href="/signup" onClick={() => setIsMenuOpen(false)} className="text-lg font-bold text-white bg-zinc-900 p-3 rounded-lg text-center">Join Now</Link>
+            <div className="pt-6 flex flex-col space-y-3">
+              <Link href="/login" onClick={() => setIsMenuOpen(false)} className="text-sm font-bold uppercase tracking-widest text-foreground bg-secondary p-4 rounded-2xl text-center">Login</Link>
+              <Link href="/signup" onClick={() => setIsMenuOpen(false)} className="text-sm font-bold uppercase tracking-widest text-primary-foreground bg-primary p-4 rounded-2xl text-center">Join Now</Link>
             </div>
           )}
         </div>
       )}
     </nav>
+  );
+}
+
+// Helper icon for mobile menu
+function ChevronRight({ size, className }: { size: number, className: string }) {
+  return (
+    <svg 
+      xmlns="http://www.w3.org/2000/svg" 
+      width={size} 
+      height={size} 
+      viewBox="0 0 24 24" 
+      fill="none" 
+      stroke="currentColor" 
+      strokeWidth="2" 
+      strokeLinecap="round" 
+      strokeLinejoin="round" 
+      className={className}
+    >
+      <path d="m9 18 6-6-6-6"/>
+    </svg>
   );
 }

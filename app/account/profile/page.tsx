@@ -4,7 +4,7 @@ import { useState, useEffect } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { useAuth } from "@/store/AuthContext"
 import { useGetProfileQuery, useUpdateProfileMutation } from "@/store/api/profileApi"
-import { Loader2, Save, User, MapPin, CreditCard, Phone, Mail, CheckCircle2, AlertCircle } from "lucide-react"
+import { Loader2, Save, User, MapPin, CreditCard, Phone, Mail, CheckCircle2, AlertCircle, Building, Landmark } from "lucide-react"
 
 export default function ProfilePage() {
   const { data: profile, isLoading } = useGetProfileQuery()
@@ -22,7 +22,7 @@ export default function ProfilePage() {
     <div className="max-w-4xl mx-auto space-y-8 pb-20">
       <div className="space-y-1">
         <h2 className="text-3xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50 transition-colors">Profile Settings</h2>
-        <p className="text-zinc-500 dark:text-zinc-400">Manage your personal information and addresses.</p>
+        <p className="text-zinc-500 dark:text-zinc-400">Manage your personal information and payment details.</p>
       </div>
 
       <ProfileForm profile={profile} key={profile?.id || 'new'} />
@@ -39,15 +39,39 @@ function ProfileForm({ profile }: { profile: any }) {
 
   const [formData, setFormData] = useState({
     full_name: profile?.full_name || "",
-    shipping_address: profile?.shipping_address || "",
-    billing_address: profile?.billing_address || "",
     phone: profile?.phone || "",
-    city: profile?.city || ""
+    shipping_address: {
+      street: profile?.shipping_address?.street || "",
+      city: profile?.shipping_address?.city || "",
+      state: profile?.shipping_address?.state || "",
+      zip: profile?.shipping_address?.zip || "",
+    },
+    billing_address: {
+      cardholder_name: profile?.billing_address?.cardholder_name || "",
+      card_number: profile?.billing_address?.card_number || "",
+      expiry_date: profile?.billing_address?.expiry_date || "",
+      cvv: profile?.billing_address?.cvv || "",
+      billing_zip: profile?.billing_address?.billing_zip || "",
+    }
   })
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target
-    setFormData(prev => ({ ...prev, [name]: value }))
+    if (name.startsWith('shipping_')) {
+      const field = name.replace('shipping_', '')
+      setFormData(prev => ({
+        ...prev,
+        shipping_address: { ...prev.shipping_address, [field]: value }
+      }))
+    } else if (name.startsWith('billing_')) {
+      const field = name.replace('billing_', '')
+      setFormData(prev => ({
+        ...prev,
+        billing_address: { ...prev.billing_address, [field]: value }
+      }))
+    } else {
+      setFormData(prev => ({ ...prev, [name]: value }))
+    }
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -60,8 +84,20 @@ function ProfileForm({ profile }: { profile: any }) {
       setSuccess(true)
       setTimeout(() => setSuccess(false), 3000)
     } catch (err: any) {
-      console.error("Failed to update profile:", err)
-      setError(err.data || "Failed to update profile. Please try again.")
+      console.error("Failed to update profile error object:", err)
+      
+      // Attempt to extract a meaningful error message
+      let errorMessage = "Failed to update profile. Please try again."
+      
+      if (err.data) {
+        errorMessage = typeof err.data === 'string' ? err.data : JSON.stringify(err.data)
+      } else if (err.message) {
+        errorMessage = err.message
+      } else if (typeof err === 'object' && Object.keys(err).length > 0) {
+        errorMessage = JSON.stringify(err)
+      }
+      
+      setError(errorMessage)
     }
   }
 
@@ -77,7 +113,7 @@ function ProfileForm({ profile }: { profile: any }) {
       {error && (
         <div className="flex items-center gap-3 p-4 bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 rounded-2xl border border-red-100 dark:border-red-900/30 animate-in fade-in slide-in-from-top-2">
           <AlertCircle size={20} />
-          <p className="text-sm font-bold">{error}</p>
+          <p className="text-sm font-bold truncate max-w-full" title={error}>{error}</p>
         </div>
       )}
 
@@ -96,7 +132,6 @@ function ProfileForm({ profile }: { profile: any }) {
                 <Mail size={16} />
                 <span className="text-sm font-medium">{user?.email}</span>
               </div>
-              <p className="text-[10px] text-zinc-400 italic">Email cannot be changed.</p>
             </div>
 
             <div className="space-y-2">
@@ -130,71 +165,149 @@ function ProfileForm({ profile }: { profile: any }) {
           </CardContent>
         </Card>
 
-        {/* Addresses */}
-        <div className="space-y-8">
-          <Card className="border-zinc-200 dark:border-zinc-800 shadow-sm overflow-hidden">
-            <CardHeader className="bg-zinc-50 dark:bg-zinc-900/50 border-b border-zinc-100 dark:border-zinc-800">
-              <CardTitle className="text-sm font-bold uppercase tracking-widest text-zinc-500 flex items-center gap-2">
-                <MapPin size={16} /> Shipping Address
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="p-6 space-y-4">
+        {/* Shipping Address */}
+        <Card className="border-zinc-200 dark:border-zinc-800 shadow-sm overflow-hidden">
+          <CardHeader className="bg-zinc-50 dark:bg-zinc-900/50 border-b border-zinc-100 dark:border-zinc-800">
+            <CardTitle className="text-sm font-bold uppercase tracking-widest text-zinc-500 flex items-center gap-2">
+              <MapPin size={16} /> Shipping Address
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="p-6 space-y-4">
+            <div className="space-y-2">
+              <label htmlFor="shipping_street" className="text-xs font-black uppercase tracking-widest text-zinc-400">Street Address</label>
+              <input
+                id="shipping_street"
+                name="shipping_street"
+                type="text"
+                value={formData.shipping_address.street}
+                onChange={handleChange}
+                placeholder="123 Luxury Ave"
+                className="w-full px-4 py-2.5 bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-xl text-sm focus:ring-2 focus:ring-zinc-900 dark:focus:ring-zinc-50 outline-hidden transition-all"
+              />
+            </div>
+            <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
-                <label htmlFor="shipping_address" className="text-xs font-black uppercase tracking-widest text-zinc-400">Address</label>
-                <textarea
-                  id="shipping_address"
-                  name="shipping_address"
-                  rows={2}
-                  value={formData.shipping_address}
-                  onChange={handleChange}
-                  placeholder="Enter your shipping address"
-                  className="w-full px-4 py-2.5 bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-xl text-sm focus:ring-2 focus:ring-zinc-900 dark:focus:ring-zinc-50 outline-hidden transition-all resize-none"
-                />
-              </div>
-              <div className="space-y-2">
-                <label htmlFor="city" className="text-xs font-black uppercase tracking-widest text-zinc-400">City</label>
+                <label htmlFor="shipping_city" className="text-xs font-black uppercase tracking-widest text-zinc-400">City</label>
                 <input
-                  id="city"
-                  name="city"
+                  id="shipping_city"
+                  name="shipping_city"
                   type="text"
-                  value={formData.city}
+                  value={formData.shipping_address.city}
                   onChange={handleChange}
                   placeholder="City"
                   className="w-full px-4 py-2.5 bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-xl text-sm focus:ring-2 focus:ring-zinc-900 dark:focus:ring-zinc-50 outline-hidden transition-all"
                 />
               </div>
-            </CardContent>
-          </Card>
-
-          <Card className="border-zinc-200 dark:border-zinc-800 shadow-sm overflow-hidden">
-            <CardHeader className="bg-zinc-50 dark:bg-zinc-900/50 border-b border-zinc-100 dark:border-zinc-800">
-              <CardTitle className="text-sm font-bold uppercase tracking-widest text-zinc-500 flex items-center gap-2">
-                <CreditCard size={16} /> Billing Address
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="p-6 space-y-4">
               <div className="space-y-2">
-                <label htmlFor="billing_address" className="text-xs font-black uppercase tracking-widest text-zinc-400">Address</label>
-                <textarea
-                  id="billing_address"
-                  name="billing_address"
-                  rows={2}
-                  value={formData.billing_address}
+                <label htmlFor="shipping_state" className="text-xs font-black uppercase tracking-widest text-zinc-400">State</label>
+                <input
+                  id="shipping_state"
+                  name="shipping_state"
+                  type="text"
+                  value={formData.shipping_address.state}
                   onChange={handleChange}
-                  placeholder="Enter your billing address"
-                  className="w-full px-4 py-2.5 bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-xl text-sm focus:ring-2 focus:ring-zinc-900 dark:focus:ring-zinc-50 outline-hidden transition-all resize-none"
+                  placeholder="State"
+                  className="w-full px-4 py-2.5 bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-xl text-sm focus:ring-2 focus:ring-zinc-900 dark:focus:ring-zinc-50 outline-hidden transition-all"
                 />
               </div>
-              <button
-                type="button"
-                onClick={() => setFormData(prev => ({ ...prev, billing_address: prev.shipping_address }))}
-                className="text-[10px] font-bold text-blue-600 hover:underline uppercase tracking-widest"
-              >
-                Same as shipping address
-              </button>
-            </CardContent>
-          </Card>
-        </div>
+            </div>
+            <div className="space-y-2">
+              <label htmlFor="shipping_zip" className="text-xs font-black uppercase tracking-widest text-zinc-400">ZIP / Postal Code</label>
+              <input
+                id="shipping_zip"
+                name="shipping_zip"
+                type="text"
+                value={formData.shipping_address.zip}
+                onChange={handleChange}
+                placeholder="10001"
+                className="w-full px-4 py-2.5 bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-xl text-sm focus:ring-2 focus:ring-zinc-900 dark:focus:ring-zinc-50 outline-hidden transition-all"
+              />
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Card Details / Billing */}
+        <Card className="border-zinc-200 dark:border-zinc-800 shadow-sm overflow-hidden md:col-span-2">
+          <CardHeader className="bg-zinc-50 dark:bg-zinc-900/50 border-b border-zinc-100 dark:border-zinc-800">
+            <CardTitle className="text-sm font-bold uppercase tracking-widest text-zinc-500 flex items-center gap-2">
+              <CreditCard size={16} /> Saved Card & Billing
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="p-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              <div className="space-y-4">
+                <div className="space-y-2">
+                  <label htmlFor="billing_cardholder_name" className="text-xs font-black uppercase tracking-widest text-zinc-400">Cardholder Name</label>
+                  <input
+                    id="billing_cardholder_name"
+                    name="billing_cardholder_name"
+                    type="text"
+                    value={formData.billing_address.cardholder_name}
+                    onChange={handleChange}
+                    placeholder="John Doe"
+                    className="w-full px-4 py-2.5 bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-xl text-sm focus:ring-2 focus:ring-zinc-900 dark:focus:ring-zinc-50 outline-hidden transition-all"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <label htmlFor="billing_card_number" className="text-xs font-black uppercase tracking-widest text-zinc-400">Card Number</label>
+                  <div className="relative">
+                    <CreditCard className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-400" size={16} />
+                    <input
+                      id="billing_card_number"
+                      name="billing_card_number"
+                      type="text"
+                      value={formData.billing_address.card_number}
+                      onChange={handleChange}
+                      placeholder="**** **** **** 1234"
+                      className="w-full pl-11 pr-4 py-2.5 bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-xl text-sm focus:ring-2 focus:ring-zinc-900 dark:focus:ring-zinc-50 outline-hidden transition-all"
+                    />
+                  </div>
+                </div>
+              </div>
+              <div className="space-y-4">
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <label htmlFor="billing_expiry_date" className="text-xs font-black uppercase tracking-widest text-zinc-400">Expiry (MM/YY)</label>
+                    <input
+                      id="billing_expiry_date"
+                      name="billing_expiry_date"
+                      type="text"
+                      value={formData.billing_address.expiry_date}
+                      onChange={handleChange}
+                      placeholder="12/28"
+                      className="w-full px-4 py-2.5 bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-xl text-sm focus:ring-2 focus:ring-zinc-900 dark:focus:ring-zinc-50 outline-hidden transition-all"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <label htmlFor="billing_cvv" className="text-xs font-black uppercase tracking-widest text-zinc-400">CVV</label>
+                    <input
+                      id="billing_cvv"
+                      name="billing_cvv"
+                      type="password"
+                      maxLength={4}
+                      value={formData.billing_address.cvv}
+                      onChange={handleChange}
+                      placeholder="***"
+                      className="w-full px-4 py-2.5 bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-xl text-sm focus:ring-2 focus:ring-zinc-900 dark:focus:ring-zinc-50 outline-hidden transition-all"
+                    />
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <label htmlFor="billing_billing_zip" className="text-xs font-black uppercase tracking-widest text-zinc-400">Billing ZIP Code</label>
+                  <input
+                    id="billing_billing_zip"
+                    name="billing_billing_zip"
+                    type="text"
+                    value={formData.billing_address.billing_zip}
+                    onChange={handleChange}
+                    placeholder="10001"
+                    className="w-full px-4 py-2.5 bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-xl text-sm focus:ring-2 focus:ring-zinc-900 dark:focus:ring-zinc-50 outline-hidden transition-all"
+                  />
+                </div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
       </div>
 
       <div className="flex justify-end pt-4">

@@ -84,7 +84,7 @@ export default async function ProductDetailPage({
             
             <div className="prose prose-zinc dark:prose-invert max-w-none">
               <p className="text-zinc-600 dark:text-zinc-400 text-lg leading-relaxed">
-                {product.description || "This premium product from Soar Fragrance combines quality craftsmanship with timeless design. Experience excellence in every detail."}
+                {product.description || "This premium product from Opal Scents combines quality craftsmanship with timeless design. Experience excellence in every detail."}
               </p>
             </div>
           </div>

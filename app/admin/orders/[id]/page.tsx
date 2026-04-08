@@ -5,7 +5,7 @@ import { useParams, useRouter } from "next/navigation"
 import { 
   Loader2, ArrowLeft, Package, User, 
   Mail, Calendar, CreditCard, ShoppingBag,
-  Truck, CheckCircle2, Clock, AlertCircle
+  Truck, CheckCircle2, Clock, AlertCircle, Home
 } from "lucide-react"
 import Link from "next/link"
 import Image from "next/image"
@@ -137,21 +137,28 @@ export default function AdminOrderDetailsPage() {
             <CardContent className="p-6 space-y-4">
               <div className="space-y-1">
                 <p className="text-[10px] font-black uppercase tracking-widest text-zinc-400">Address</p>
-                <p className="text-sm font-bold text-zinc-900 dark:text-zinc-50 leading-relaxed">
-                  {order.shipping_address || "No address provided"}
-                </p>
+                {typeof order.shipping_address === 'object' && order.shipping_address !== null ? (
+                  <div className="text-sm font-bold text-zinc-900 dark:text-zinc-50 space-y-0.5">
+                    <p className="flex items-center gap-2"><Home size={12} className="text-zinc-400" /> {order.shipping_address.street || "No street provided"}</p>
+                    <p className="pl-5">{order.shipping_address.city}, {order.shipping_address.state} {order.shipping_address.zip}</p>
+                  </div>
+                ) : (
+                  <p className="text-sm font-bold text-zinc-900 dark:text-zinc-50 leading-relaxed">
+                    {order.shipping_address || "No address provided"}
+                  </p>
+                )}
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-1">
-                  <p className="text-[10px] font-black uppercase tracking-widest text-zinc-400">City</p>
+                  <p className="text-[10px] font-black uppercase tracking-widest text-zinc-400">Profile City</p>
                   <p className="text-sm font-bold text-zinc-900 dark:text-zinc-50">
-                    {order.city || "N/A"}
+                    {order.profiles?.city || "N/A"}
                   </p>
                 </div>
                 <div className="space-y-1">
                   <p className="text-[10px] font-black uppercase tracking-widest text-zinc-400">Phone</p>
                   <p className="text-sm font-bold text-zinc-900 dark:text-zinc-50">
-                    {order.phone || "N/A"}
+                    {order.profiles?.phone || order.phone || "N/A"}
                   </p>
                 </div>
               </div>
@@ -211,8 +218,19 @@ export default function AdminOrderDetailsPage() {
                 <span className="font-bold text-zinc-900 dark:text-zinc-50 uppercase tracking-tighter">Paystack</span>
               </div>
               <Separator className="bg-zinc-100 dark:bg-zinc-800" />
+              <div className="space-y-2">
+                <div className="flex justify-between items-center text-sm">
+                  <span className="text-zinc-500 font-medium">Subtotal</span>
+                  <span className="font-bold text-zinc-900 dark:text-zinc-50">${((order.total_amount || 0) - 10).toFixed(2)}</span>
+                </div>
+                <div className="flex justify-between items-center text-sm">
+                  <span className="text-zinc-500 font-medium">Shipping</span>
+                  <span className="font-bold text-zinc-900 dark:text-zinc-50">$10.00</span>
+                </div>
+              </div>
+              <Separator className="bg-zinc-100 dark:bg-zinc-800" />
               <div className="flex justify-between items-center">
-                <span className="text-zinc-500 font-medium text-sm">Total Amount</span>
+                <span className="text-zinc-900 dark:text-zinc-50 font-bold">Total Amount</span>
                 <span className="text-2xl font-black text-zinc-900 dark:text-zinc-50">
                   ${(order.total_amount || 0).toFixed(2)}
                 </span>
@@ -251,10 +269,10 @@ export default function AdminOrderDetailsPage() {
                         </div>
                         <div className="text-left sm:text-right">
                           <p className="font-black text-zinc-900 dark:text-zinc-50">
-                            ${((item.price || 0) * (item.quantity || 1)).toFixed(2)}
+                            ${((item.price ?? item.products?.price ?? 0) * (item.quantity || 1)).toFixed(2)}
                           </p>
                           <p className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest mt-0.5">
-                            ${(item.price || 0).toFixed(2)} × {item.quantity}
+                            ${(item.price ?? item.products?.price ?? 0).toFixed(2)} × {item.quantity}
                           </p>
                         </div>
                       </div>

@@ -1,42 +1,66 @@
 import { useGetCartQuery, useAddToCartMutation, useRemoveFromCartMutation, useUpdateCartQuantityMutation } from './api/cartApi'
+import { useSelector, useDispatch } from 'react-redux'
+import { RootState } from './store'
+import { addToLocalCart, removeFromLocalCart, updateLocalCartQuantity } from './localCartSlice'
+import { useAuth } from './AuthContext'
 
 export const useCart = () => {
-  const { data: cart, isLoading, error } = useGetCartQuery()
-  const [addToCart] = useAddToCartMutation()
-  const [removeFromCart] = useRemoveFromCartMutation()
-  const [updateQuantityMutation] = useUpdateCartQuantityMutation()
+  const { user } = useAuth()
+  const dispatch = useDispatch()
+  
+  // Remote Cart (for authenticated users)
+  const { data: remoteCart, isLoading: isRemoteLoading, error: remoteError } = useGetCartQuery(undefined, { skip: !user })
+  const [addToRemoteCart] = useAddToCartMutation()
+  const [removeFromRemoteCart] = useRemoveFromCartMutation()
+  const [updateRemoteQuantityMutation] = useUpdateCartQuantityMutation()
 
-  if (error) {
-    console.log("Error from useGetCartQuery in useCart hook:", error)
+  // Local Cart (for guest users)
+  const localCartItems = useSelector((state: RootState) => state.localCart.items)
+
+  if (remoteError && user) {
+    console.log("Error from useGetCartQuery in useCart hook:", remoteError)
   }
 
-  const items = cart?.cart_items || []
+  const items = user ? (remoteCart?.cart_items || []) : localCartItems
+  const isLoading = user ? isRemoteLoading : false
 
   return {
     items,
     isLoading,
-    error,
+    error: user ? remoteError : null,
     addItem: async (product: any, quantity: number = 1) => {
-      const productId = typeof product === 'string' ? product : product.id
-      try {
-        await addToCart({ productId, quantity }).unwrap()
-      } catch (err) {
-        console.log("Error adding to cart in useCart hook:", err)
+      if (user) {
+        const productId = typeof product === 'string' ? product : product.id
+        try {
+          await addToRemoteCart({ productId, quantity }).unwrap()
+        } catch (err) {
+          console.log("Error adding to remote cart:", err)
+        }
+      } else {
+        dispatch(addToLocalCart({ product, quantity }))
       }
     },
     removeItem: async (id: string) => {
-      try {
-        await removeFromCart(id).unwrap()
-      } catch (err) {
-        console.log("Error removing from cart in useCart hook:", err)
+      if (user) {
+        try {
+          await removeFromRemoteCart(id).unwrap()
+        } catch (err) {
+          console.log("Error removing from remote cart:", err)
+        }
+      } else {
+        dispatch(removeFromLocalCart(id))
       }
     },
     updateQuantity: async (itemId: string, quantity: number) => {
       if (quantity < 1) return
-      try {
-        await updateQuantityMutation({ itemId, quantity }).unwrap()
-      } catch (err) {
-        console.log("Error updating quantity in useCart hook:", err)
+      if (user) {
+        try {
+          await updateRemoteQuantityMutation({ itemId, quantity }).unwrap()
+        } catch (err) {
+          console.log("Error updating remote quantity:", err)
+        }
+      } else {
+        dispatch(updateLocalCartQuantity({ productId: itemId, quantity }))
       }
     },
   }

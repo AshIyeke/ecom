@@ -2,6 +2,7 @@
 
 import { Package, CheckCircle2, Clock, AlertCircle } from "lucide-react"
 import { format } from "date-fns"
+import Link from "next/link"
 
 interface OrderItemProps {
   order: any
@@ -35,11 +36,12 @@ export default function OrderItem({ order }: OrderItemProps) {
   }
 
   return (
-    <div 
-      className="flex flex-col md:flex-row md:items-center justify-between p-4 border border-zinc-200 dark:border-zinc-800 rounded-xl hover:bg-zinc-50 dark:hover:bg-zinc-900/50 transition-all hover:shadow-sm gap-4"
+    <Link 
+      href={`/account/orders/${order.id}`}
+      className="flex flex-col md:flex-row md:items-center justify-between p-4 border border-zinc-200 dark:border-zinc-800 rounded-xl hover:bg-zinc-50 dark:hover:bg-zinc-900/50 transition-all hover:shadow-sm gap-4 group"
     >
       <div className="flex items-start gap-4">
-        <div className="bg-zinc-100 dark:bg-zinc-800 p-3 rounded-xl">
+        <div className="bg-zinc-100 dark:bg-zinc-800 p-3 rounded-xl group-hover:bg-white dark:group-hover:bg-zinc-800 transition-colors">
           <Package className="h-6 w-6 text-zinc-600 dark:text-zinc-400" />
         </div>
         <div>
@@ -53,11 +55,6 @@ export default function OrderItem({ order }: OrderItemProps) {
                 {order.status}
               </span>
             </div>
-            {order.paystack_id && (
-              <span className="text-[10px] text-zinc-400 font-mono hidden sm:inline-block">
-                ID: {order.paystack_id}
-              </span>
-            )}
           </div>
           <p className="text-xs text-zinc-500 mt-1.5">
             {format(new Date(order.created_at), 'PPP')}
@@ -85,6 +82,6 @@ export default function OrderItem({ order }: OrderItemProps) {
           {order.order_items?.length || 0} {order.order_items?.length === 1 ? 'Item' : 'Items'}
         </p>
       </div>
-    </div>
+    </Link>
   )
 }

@@ -2,7 +2,6 @@ import React from "react";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import CartContainer from "@/components/CartContainer";
-import CheckoutButton from "@/components/CheckoutButton";
 
 export default function CartPage() {
   return (
@@ -20,9 +19,7 @@ export default function CartPage() {
         </h1>
       </div>
 
-      <CartContainer>
-        <CheckoutButton />
-      </CartContainer>
+      <CartContainer />
     </div>
   );
 }

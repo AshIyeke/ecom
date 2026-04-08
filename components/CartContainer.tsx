@@ -7,7 +7,7 @@ import { useCart } from "@/store/useCart";
 import CartItemCard from "@/components/CartItemCard";
 
 interface CartContainerProps {
-  children: React.ReactNode;
+  children?: React.ReactNode;
 }
 
 export default function CartContainer({ children }: CartContainerProps) {
@@ -96,7 +96,14 @@ export default function CartContainer({ children }: CartContainerProps) {
             </div>
           </div>
 
-          {children}
+          {items.length > 0 && (
+            <Link
+              href="/checkout"
+              className="w-full mt-6 bg-zinc-900 text-white dark:bg-zinc-50 dark:text-zinc-900 py-4 rounded-xl text-sm font-bold uppercase tracking-widest hover:opacity-90 transition-all shadow-lg inline-block text-center active:scale-[0.98]"
+            >
+              Proceed to Checkout
+            </Link>
+          )}
           
           <p className="text-[10px] text-center text-zinc-400 mt-4 uppercase tracking-[0.2em]">
             Secure Payment Powered by Paystack

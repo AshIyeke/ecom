@@ -95,7 +95,7 @@ export default function FragranceShowcase() {
           <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
             <div className="text-center">
               <span className="text-white text-4xl md:text-6xl font-serif tracking-widest opacity-80 mix-blend-overlay">
-                SOAR
+                Opal Scents
               </span>
             </div>
           </div> */}

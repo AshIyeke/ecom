@@ -144,7 +144,7 @@ export async function updateOrderStatus(orderId: string, status: string) {
     throw new Error(error.message || "Failed to update order status");
   }
 }
-export async function createOrder(cartItems: any[], totalAmount: number) {
+export async function createOrder(cartItems: any[], totalAmount: number, shippingAddress: any) {
   const supabase = await createClient();
   const {
     data: { user },
@@ -158,6 +158,7 @@ export async function createOrder(cartItems: any[], totalAmount: number) {
       p_user_id: user.id,
       p_total_amount: totalAmount,
       p_items: cartItems,
+      p_shipping_address: shippingAddress || {}, // Use the selected shipping address
     },
   );
 

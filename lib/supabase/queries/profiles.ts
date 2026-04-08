@@ -16,7 +16,6 @@ export async function getProfile() {
 
   if (error) {
     console.error("[getProfile] Error:", error.message);
-    // If profile doesn't exist, we might want to return a default or null
     if (error.code === "PGRST116") return null;
     throw new Error(`Failed to fetch profile: ${error.message}`);
   }
@@ -24,28 +23,32 @@ export async function getProfile() {
   return data;
 }
 
-export async function updateProfile(profileData: {
-  full_name?: string;
-  shipping_address?: string;
-  billing_address?: string;
-  phone?: string;
-  city?: string;
-}) {
+export async function updateProfile(profileData: any) {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
 
   if (!user) throw new Error("Not authenticated");
 
+  // Filter to only include known-safe columns to prevent "column does not exist" errors
+  const safePayload: any = {};
+  
+  if ('full_name' in profileData) safePayload.full_name = profileData.full_name;
+  if ('phone' in profileData) safePayload.phone = profileData.phone;
+  if ('shipping_address' in profileData) safePayload.shipping_address = profileData.shipping_address;
+  if ('billing_address' in profileData) safePayload.billing_address = profileData.billing_address;
+
+  console.log("[updateProfile] Updating profile for user:", user.id, "with payload:", safePayload);
+
   const { data, error } = await supabase
     .from("profiles")
-    .update(profileData)
+    .update(safePayload)
     .eq("id", user.id)
     .select()
     .single();
 
   if (error) {
-    console.error("[updateProfile] Error:", error.message);
-    throw new Error(`Failed to update profile: ${error.message}`);
+    console.error("[updateProfile] DB Error:", error.message, error.code, error.details);
+    throw new Error(error.message || "Database update failed");
   }
 
   return data;

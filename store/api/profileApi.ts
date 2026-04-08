@@ -19,8 +19,8 @@ export const profileApi = createApi({
     }),
     updateProfile: builder.mutation<any, {
       full_name?: string;
-      shipping_address?: string;
-      billing_address?: string;
+      shipping_address?: any;
+      billing_address?: any;
       phone?: string;
       city?: string;
     }>({

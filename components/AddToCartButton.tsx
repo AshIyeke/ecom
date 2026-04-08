@@ -2,10 +2,10 @@
 
 import { useCart } from "@/store/useCart";
 import { ShoppingCart } from "lucide-react";
-import { Product } from "@/types/product";
+import { ProductCardType } from "@/types/product";
 
 interface AddToCartButtonProps {
-  product: Product;
+  product: ProductCardType;
 }
 
 export default function AddToCartButton({ product }: AddToCartButtonProps) {

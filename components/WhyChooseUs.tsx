@@ -14,7 +14,7 @@ export default function WhyChooseUs() {
           </h2>
           <p className="text-gray-400 text-sm md:text-base leading-relaxed max-w-md">
             We don't just create perfumes, we craft emotions that linger. Every 
-            <span className="text-white font-bold mx-1">SOAR FRAGRANCE</span> 
+            <span className="text-white font-bold mx-1">OPAL SCENTS</span> 
             bottle is hand-blended in small batches with globally sourced ingredients 
             for depth and uniqueness. From Bangladesh to the world, we make scent personal again.
           </p>
@@ -80,7 +80,7 @@ export default function WhyChooseUs() {
         {/* Bottom Right: Value Proposition */}
         <div className="space-y-6 md:mt-24">
           <h2 className="text-4xl md:text-5xl font-serif italic leading-tight">
-            Why Choose Soar<br />
+            Why Choose Opal Scents<br />
             Fragrance
           </h2>
           <p className="text-gray-400 text-sm md:text-base leading-relaxed max-w-md">
