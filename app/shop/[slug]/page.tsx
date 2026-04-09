@@ -4,6 +4,8 @@ import { Star, ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import AddToCartButton from "@/components/AddToCartButton";
+import ProductReviews from "@/components/ProductReviews";
+import { getReviews } from "@/lib/supabase/queries/reviews";
 
 export default async function ProductDetailPage({
   params,
@@ -14,8 +16,12 @@ export default async function ProductDetailPage({
   
   // Use slug as ID for fetching data
   let product;
+  let reviews = [];
   try {
     product = await getProduct(slug);
+    if (product) {
+      reviews = await getReviews(product.id);
+    }
   } catch (error) {
     console.error("Error loading product:", error);
     return notFound();
@@ -24,6 +30,10 @@ export default async function ProductDetailPage({
   if (!product) {
     return notFound();
   }
+
+  const averageRating = reviews.length > 0 
+    ? reviews.reduce((acc: number, curr: any) => acc + curr.rating, 0) / reviews.length 
+    : 0;
 
   return (
     <div className="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
@@ -70,10 +80,12 @@ export default async function ProductDetailPage({
                 <Star
                   key={i}
                   size={20}
-                  className="fill-yellow-400 text-yellow-400"
+                  className={i < Math.round(averageRating) ? "fill-yellow-400 text-yellow-400" : "text-zinc-300 dark:text-zinc-700"}
                 />
               ))}
-              <span className="text-sm text-zinc-500 font-medium ml-2">5.0 (No reviews yet)</span>
+              <span className="text-sm text-zinc-500 font-medium ml-2">
+                {averageRating > 0 ? `${averageRating.toFixed(1)} (${reviews.length} reviews)` : "No reviews yet"}
+              </span>
             </div>
           </div>
           
@@ -96,7 +108,7 @@ export default async function ProductDetailPage({
               price: product.price,
               image: product.image_url || "",
               category: product.categories?.name || "Uncategorized",
-              rating: 5
+              rating: averageRating || 5
             }} />
           </div>
           
@@ -112,6 +124,8 @@ export default async function ProductDetailPage({
           </div>
         </div>
       </div>
+
+      <ProductReviews productId={product.id} />
     </div>
   );
 }

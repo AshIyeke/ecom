@@ -3,6 +3,7 @@ import { productApi } from './api/productApi'
 import { cartApi } from './api/cartApi'
 import { orderApi } from './api/orderApi'
 import { profileApi } from './api/profileApi'
+import { reviewApi } from './api/reviewApi'
 import localCartReducer from './localCartSlice'
 
 export const store = configureStore({
@@ -11,6 +12,7 @@ export const store = configureStore({
     [cartApi.reducerPath]: cartApi.reducer,
     [orderApi.reducerPath]: orderApi.reducer,
     [profileApi.reducerPath]: profileApi.reducer,
+    [reviewApi.reducerPath]: reviewApi.reducer,
     localCart: localCartReducer,
   },
   middleware: (getDefaultMiddleware) =>
@@ -18,7 +20,8 @@ export const store = configureStore({
       productApi.middleware, 
       cartApi.middleware, 
       orderApi.middleware,
-      profileApi.middleware
+      profileApi.middleware,
+      reviewApi.middleware
     ),
 })
 
