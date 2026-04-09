@@ -8,13 +8,21 @@ import {
   ShoppingBag, 
   Menu, 
   X,
-  LogOut
+  LogOut,
+  ChevronRight
 } from 'lucide-react';
 import { useCart } from '@/store/useCart';
 import { useAuth } from '@/store/AuthContext';
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+  SheetClose
+} from "@/components/ui/sheet";
 
 export default function Navbar() {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { user, role, signOut } = useAuth();
   const { items } = useCart();
   const itemCount = items.reduce((acc: number, item: any) => acc + item.quantity, 0);
@@ -80,74 +88,70 @@ export default function Navbar() {
             )}
           </Link>
 
-          {/* Mobile Menu Toggle */}
-          <button 
-            onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className="p-2.5 hover:bg-secondary rounded-full transition-colors lg:hidden text-foreground/80 hover:text-foreground ml-1"
-          >
-            {isMenuOpen ? <X size={20} strokeWidth={1.5} /> : <Menu size={20} strokeWidth={1.5} />}
-          </button>
+          {/* Mobile Menu Toggle with Sheet */}
+          <Sheet>
+            <SheetTrigger asChild>
+              <button 
+                className="p-2.5 hover:bg-secondary rounded-full transition-colors lg:hidden text-foreground/80 hover:text-foreground ml-1"
+                aria-label="Open Menu"
+              >
+                <Menu size={20} strokeWidth={1.5} />
+              </button>
+            </SheetTrigger>
+            <SheetContent side="top" className="h-auto p-0 pt-20 border-b border-border shadow-2xl">
+              <SheetHeader className="sr-only">
+                <SheetTitle>Navigation Menu</SheetTitle>
+              </SheetHeader>
+              <div className="p-8 flex flex-col space-y-6 bg-background animate-in slide-in-from-top-4 duration-300">
+                <SheetClose asChild>
+                  <Link href="/shop" className="text-2xl font-serif tracking-tight text-foreground border-b border-border pb-4 flex justify-between items-center group">
+                    Shop <ChevronRight size={20} className="text-muted-foreground group-hover:translate-x-1 transition-transform" />
+                  </Link>
+                </SheetClose>
+                <SheetClose asChild>
+                  <Link href="/story" className="text-2xl font-serif tracking-tight text-foreground border-b border-border pb-4 flex justify-between items-center group">
+                    Story <ChevronRight size={20} className="text-muted-foreground group-hover:translate-x-1 transition-transform" />
+                  </Link>
+                </SheetClose>
+                <SheetClose asChild>
+                  <Link href="/contact" className="text-2xl font-serif tracking-tight text-foreground border-b border-border pb-4 flex justify-between items-center group">
+                    Contact <ChevronRight size={20} className="text-muted-foreground group-hover:translate-x-1 transition-transform" />
+                  </Link>
+                </SheetClose>
+                
+                {user ? (
+                  <div className="pt-6 flex flex-col space-y-3">
+                    <SheetClose asChild>
+                      <Link href="/account" className="flex items-center justify-center space-x-2 text-sm font-bold uppercase tracking-widest text-foreground bg-secondary p-4 rounded-2xl">
+                        <User size={18} />
+                        <span>My Account</span>
+                      </Link>
+                    </SheetClose>
+                    <SheetClose asChild>
+                      <button 
+                        onClick={() => signOut()} 
+                        className="flex items-center justify-center space-x-2 text-sm font-bold uppercase tracking-widest text-primary-foreground bg-primary p-4 rounded-2xl"
+                      >
+                        <LogOut size={18} />
+                        <span>Sign Out</span>
+                      </button>
+                    </SheetClose>
+                  </div>
+                ) : (
+                  <div className="pt-6 flex flex-col space-y-3">
+                    <SheetClose asChild>
+                      <Link href="/login" className="text-sm font-bold uppercase tracking-widest text-foreground bg-secondary p-4 rounded-2xl text-center">Login</Link>
+                    </SheetClose>
+                    <SheetClose asChild>
+                      <Link href="/signup" className="text-sm font-bold uppercase tracking-widest text-primary-foreground bg-primary p-4 rounded-2xl text-center">Join Now</Link>
+                    </SheetClose>
+                  </div>
+                )}
+              </div>
+            </SheetContent>
+          </Sheet>
         </div>
       </div>
-
-      {/* Mobile Drawer Menu */}
-      {isMenuOpen && (
-        <div className="lg:hidden absolute top-20 left-0 w-full bg-background shadow-2xl border-t border-border p-8 flex flex-col space-y-6 animate-in slide-in-from-top-4 duration-300">
-          <Link href="/shop" onClick={() => setIsMenuOpen(false)} className="text-2xl font-serif tracking-tight text-foreground border-b border-border pb-4 flex justify-between items-center group">
-            Shop <ChevronRight size={20} className="text-muted-foreground group-hover:translate-x-1 transition-transform" />
-          </Link>
-          <Link href="/story" onClick={() => setIsMenuOpen(false)} className="text-2xl font-serif tracking-tight text-foreground border-b border-border pb-4 flex justify-between items-center group">
-            Story <ChevronRight size={20} className="text-muted-foreground group-hover:translate-x-1 transition-transform" />
-          </Link>
-          <Link href="/contact" onClick={() => setIsMenuOpen(false)} className="text-2xl font-serif tracking-tight text-foreground border-b border-border pb-4 flex justify-between items-center group">
-            Contact <ChevronRight size={20} className="text-muted-foreground group-hover:translate-x-1 transition-transform" />
-          </Link>
-          
-          {user ? (
-            <div className="pt-6 flex flex-col space-y-3">
-              <Link href="/account" onClick={() => setIsMenuOpen(false)} className="flex items-center justify-center space-x-2 text-sm font-bold uppercase tracking-widest text-foreground bg-secondary p-4 rounded-2xl">
-                <User size={18} />
-                <span>My Account</span>
-              </Link>
-              <button 
-                onClick={() => {
-                  signOut();
-                  setIsMenuOpen(false);
-                }} 
-                className="flex items-center justify-center space-x-2 text-sm font-bold uppercase tracking-widest text-primary-foreground bg-primary p-4 rounded-2xl"
-              >
-                <LogOut size={18} />
-                <span>Sign Out</span>
-              </button>
-            </div>
-          ) : (
-            <div className="pt-6 flex flex-col space-y-3">
-              <Link href="/login" onClick={() => setIsMenuOpen(false)} className="text-sm font-bold uppercase tracking-widest text-foreground bg-secondary p-4 rounded-2xl text-center">Login</Link>
-              <Link href="/signup" onClick={() => setIsMenuOpen(false)} className="text-sm font-bold uppercase tracking-widest text-primary-foreground bg-primary p-4 rounded-2xl text-center">Join Now</Link>
-            </div>
-          )}
-        </div>
-      )}
     </nav>
-  );
-}
-
-// Helper icon for mobile menu
-function ChevronRight({ size, className }: { size: number, className: string }) {
-  return (
-    <svg 
-      xmlns="http://www.w3.org/2000/svg" 
-      width={size} 
-      height={size} 
-      viewBox="0 0 24 24" 
-      fill="none" 
-      stroke="currentColor" 
-      strokeWidth="2" 
-      strokeLinecap="round" 
-      strokeLinejoin="round" 
-      className={className}
-    >
-      <path d="m9 18 6-6-6-6"/>
-    </svg>
   );
 }

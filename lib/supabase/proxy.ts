@@ -38,7 +38,10 @@ export async function updateSessionProxy(request: NextRequest) {
     !request.nextUrl.pathname.startsWith('/signup') &&
     !request.nextUrl.pathname.startsWith('/auth') &&
     !request.nextUrl.pathname.startsWith('/shop') &&
-    !request.nextUrl.pathname.startsWith('/cart')
+    !request.nextUrl.pathname.startsWith('/cart') &&
+    !request.nextUrl.pathname.startsWith('/story') &&
+    !request.nextUrl.pathname.startsWith('/contact') &&
+    !request.nextUrl.pathname.startsWith('/api')
   ) {
     const url = request.nextUrl.clone()
     url.pathname = '/'
