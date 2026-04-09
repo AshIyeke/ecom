@@ -5,6 +5,8 @@ import { useUpdateProductMutation } from "@/store/api/productApi";
 import { getCategories } from "@/app/shop/actions";
 import { Upload, Loader2, Save, AlertCircle, CheckCircle2, Globe, Lock } from "lucide-react";
 import { Category } from "@/types/product";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 
 interface EditProductFormProps {
   product: any;
@@ -103,7 +105,7 @@ export default function EditProductForm({ product, onSuccess }: EditProductFormP
         <div className="space-y-3">
           <label className="text-sm font-semibold text-zinc-700 dark:text-zinc-300">Product Image</label>
           <div className="relative group">
-            <div className={`aspect-video w-full rounded-xl border-2 border-dashed transition-all flex flex-col items-center justify-center overflow-hidden bg-zinc-50 dark:bg-zinc-800/50 ${
+            <div className={`aspect-video w-full rounded-xl border-2 border-dashed transition-all flex flex-col items-center justify-center overflow-hidden bg-background/50 ${
               preview ? "border-zinc-300 dark:border-zinc-700" : "border-zinc-200 dark:border-zinc-800 hover:border-zinc-300 dark:hover:border-zinc-700"
             }`}>
               {preview ? (
@@ -129,14 +131,14 @@ export default function EditProductForm({ product, onSuccess }: EditProductFormP
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="space-y-2">
             <label htmlFor="name" className="text-sm font-semibold text-zinc-700 dark:text-zinc-300">Product Name</label>
-            <input
+            <Input
               id="name"
               name="name"
               type="text"
               required
               defaultValue={product.name}
               placeholder="Product name"
-              className="w-full px-4 py-2.5 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 focus:ring-2 focus:ring-zinc-900 dark:focus:ring-zinc-50 outline-hidden transition-all text-sm"
+              className="h-11 rounded-xl px-4"
             />
           </div>
 
@@ -147,7 +149,7 @@ export default function EditProductForm({ product, onSuccess }: EditProductFormP
               name="category_id"
               required
               defaultValue={product.category_id}
-              className="w-full px-4 py-2.5 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 focus:ring-2 focus:ring-zinc-900 dark:focus:ring-zinc-50 outline-hidden transition-all text-sm appearance-none"
+              className="w-full h-11 px-4 rounded-xl border border-input bg-background/50 focus:ring-2 focus:ring-primary/20 focus:border-primary outline-hidden transition-all text-sm appearance-none"
             >
               <option value="">Select Category</option>
               {categories.map((cat) => (
@@ -160,7 +162,7 @@ export default function EditProductForm({ product, onSuccess }: EditProductFormP
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="space-y-2">
             <label htmlFor="price" className="text-sm font-semibold text-zinc-700 dark:text-zinc-300">Price ($)</label>
-            <input
+            <Input
               id="price"
               name="price"
               type="number"
@@ -168,20 +170,20 @@ export default function EditProductForm({ product, onSuccess }: EditProductFormP
               required
               defaultValue={product.price}
               placeholder="0.00"
-              className="w-full px-4 py-2.5 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 focus:ring-2 focus:ring-zinc-900 dark:focus:ring-zinc-50 outline-hidden transition-all text-sm"
+              className="h-11 rounded-xl px-4"
             />
           </div>
 
           <div className="space-y-2">
             <label htmlFor="stock" className="text-sm font-semibold text-zinc-700 dark:text-zinc-300">Stock</label>
-            <input
+            <Input
               id="stock"
               name="stock"
               type="number"
               required
               defaultValue={product.stock}
               placeholder="0"
-              className="w-full px-4 py-2.5 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 focus:ring-2 focus:ring-zinc-900 dark:focus:ring-zinc-50 outline-hidden transition-all text-sm"
+              className="h-11 rounded-xl px-4"
             />
           </div>
         </div>
@@ -195,7 +197,7 @@ export default function EditProductForm({ product, onSuccess }: EditProductFormP
               className={`flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl border text-xs font-bold uppercase transition-all ${
                 isPublished 
                   ? "bg-zinc-900 text-white border-zinc-900 dark:bg-zinc-50 dark:text-zinc-900 dark:border-zinc-50" 
-                  : "bg-transparent text-zinc-500 border-zinc-200 dark:border-zinc-800"
+                  : "bg-background/50 text-zinc-500 border-zinc-200 dark:border-zinc-800"
               }`}
             >
               <Globe size={14} />
@@ -207,7 +209,7 @@ export default function EditProductForm({ product, onSuccess }: EditProductFormP
               className={`flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl border text-xs font-bold uppercase transition-all ${
                 !isPublished 
                   ? "bg-zinc-900 text-white border-zinc-900 dark:bg-zinc-50 dark:text-zinc-900 dark:border-zinc-50" 
-                  : "bg-transparent text-zinc-500 border-zinc-200 dark:border-zinc-800"
+                  : "bg-background/50 text-zinc-500 border-zinc-200 dark:border-zinc-800"
               }`}
             >
               <Lock size={14} />
@@ -218,13 +220,13 @@ export default function EditProductForm({ product, onSuccess }: EditProductFormP
 
         <div className="space-y-2">
           <label htmlFor="description" className="text-sm font-semibold text-zinc-700 dark:text-zinc-300">Description</label>
-          <textarea
+          <Textarea
             id="description"
             name="description"
             rows={3}
             defaultValue={product.description}
             placeholder="Product description..."
-            className="w-full px-4 py-2.5 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 focus:ring-2 focus:ring-zinc-900 dark:focus:ring-zinc-50 outline-hidden transition-all text-sm resize-none"
+            className="min-h-[120px] resize-none"
           />
         </div>
       </div>

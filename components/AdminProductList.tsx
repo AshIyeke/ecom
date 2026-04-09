@@ -252,30 +252,30 @@ export default function AdminProductList() {
           </div>
 
           {/* Mobile Card View */}
-          <div className="md:hidden space-y-4">
+          <div className="md:hidden space-y-8 px-2 pb-10">
             {products.map((product) => (
               <div 
                 key={product.id} 
-                className="bg-card border border-border rounded-2xl p-5 space-y-5 shadow-xs"
+                className="bg-card border border-border rounded-[2rem] p-6 space-y-6 shadow-sm animate-in fade-in slide-in-from-bottom-2 duration-500"
               >
-                <div className="flex items-center gap-4">
-                  <div className="relative w-20 h-20 rounded-2xl overflow-hidden bg-muted flex-shrink-0 border border-border">
+                <div className="flex items-center gap-5">
+                  <div className="relative w-24 h-24 rounded-2xl overflow-hidden bg-muted flex-shrink-0 border border-border shadow-inner">
                     <Image
                       src={product.image_url}
                       alt={product.name}
                       fill
                       className="object-cover"
-                      sizes="80px"
+                      sizes="96px"
                     />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <h4 className="font-bold text-foreground text-base tracking-tight truncate">{product.name}</h4>
-                    <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mt-0.5">{product.categories?.name || "Global"}</p>
-                    <div className="flex items-center gap-3 mt-2">
-                      <span className="text-lg font-black text-foreground tracking-tighter">
+                    <h4 className="font-serif font-bold text-foreground text-lg tracking-tight truncate">{product.name}</h4>
+                    <p className="text-[10px] font-black uppercase tracking-[0.2em] text-primary/70 mt-1">{product.categories?.name || "Global Collection"}</p>
+                    <div className="flex items-center gap-3 mt-3">
+                      <span className="text-xl font-black text-foreground tracking-tighter">
                         ${(product.price || 0).toFixed(2)}
                       </span>
-                      <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-[8px] font-black uppercase tracking-widest border ${
+                      <span className={`inline-flex items-center px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest border ${
                         product.is_published 
                           ? 'bg-green-50 text-green-700 border-green-100 dark:bg-green-900/20 dark:text-green-400 dark:border-green-900/30' 
                           : 'bg-muted text-muted-foreground border-border'
@@ -286,31 +286,32 @@ export default function AdminProductList() {
                   </div>
                 </div>
 
-                <div className="flex items-center justify-between pt-4 border-t border-border">
-                  <div className="flex flex-col">
-                    <span className="text-[10px] uppercase font-black tracking-widest text-muted-foreground">Inventory</span>
-                    <span className={`text-sm font-black ${product.stock <= 5 ? 'text-destructive' : 'text-foreground'}`}>
+                <div className="flex items-center justify-between pt-6 border-t border-border">
+                  <div className="flex flex-col gap-1">
+                    <span className="text-[10px] uppercase font-black tracking-[0.2em] text-muted-foreground/60">Inventory</span>
+                    <span className={`text-sm font-black flex items-center gap-2 ${product.stock <= 5 ? 'text-destructive' : 'text-foreground'}`}>
+                      <span className={`w-2 h-2 rounded-full ${product.stock <= 5 ? 'bg-destructive animate-pulse' : 'bg-green-500'}`} />
                       {product.stock} units
                     </span>
                   </div>
                   <div className="flex gap-2">
                     <Link 
                       href={`/admin/products/${product.id}`}
-                      className="p-2.5 rounded-xl bg-muted text-foreground border border-border shadow-xs"
+                      className="p-3 rounded-2xl bg-secondary border border-border shadow-xs hover:bg-background transition-colors"
                     >
-                      <Eye size={18} />
+                      <Eye size={20} />
                     </Link>
                     <Link
                       href={`/admin/products/${product.id}`}
-                      className="p-2.5 rounded-xl bg-primary/5 text-primary border border-primary/10 shadow-xs"
+                      className="p-3 rounded-2xl bg-primary/5 text-primary border border-primary/10 shadow-xs hover:bg-primary/10 transition-colors"
                     >
-                      <Pencil size={18} />
+                      <Pencil size={20} />
                     </Link>
                     <button 
                       onClick={() => handleDelete(product.id, product.name)}
-                      className="p-2.5 rounded-xl bg-destructive/5 text-destructive border border-destructive/10 shadow-xs"
+                      className="p-3 rounded-2xl bg-destructive/5 text-destructive border border-destructive/10 shadow-xs hover:bg-destructive/10 transition-colors"
                     >
-                      <Trash2 size={18} />
+                      <Trash2 size={20} />
                     </button>
                   </div>
                 </div>

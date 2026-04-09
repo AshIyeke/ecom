@@ -5,6 +5,8 @@ import { useAddProductMutation } from "@/store/api/productApi";
 import { getCategories } from "@/app/shop/actions";
 import { Upload, Loader2, Plus, AlertCircle, CheckCircle2, Globe, Lock } from "lucide-react";
 import { Category } from "@/types/product";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 
 export default function AddProductForm() {
   const [categories, setCategories] = useState<Category[]>([]);
@@ -77,36 +79,52 @@ export default function AddProductForm() {
   const error = mutationError ? (mutationError as any).data || "Something went wrong" : null;
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
+    <form onSubmit={handleSubmit} className="space-y-8">
       {error && (
-        <div className="flex items-center gap-2 p-4 text-sm bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 rounded-xl border border-red-100 dark:border-red-900/30">
-          <AlertCircle size={18} />
-          <span>{error}</span>
+        <div className="flex items-start gap-3 p-4 text-sm bg-destructive/5 text-destructive rounded-2xl border border-destructive/10 animate-in fade-in slide-in-from-top-2">
+          <AlertCircle size={18} className="mt-0.5 shrink-0" />
+          <span className="font-medium leading-relaxed">{error}</span>
         </div>
       )}
 
       {success && (
-        <div className="flex items-center gap-2 p-4 text-sm bg-green-50 dark:bg-green-900/20 text-green-600 dark:text-green-400 rounded-xl border border-green-100 dark:border-green-900/30">
-          <CheckCircle2 size={18} />
-          <span>Product added successfully!</span>
+        <div className="flex items-center gap-3 p-4 text-sm bg-green-500/5 text-green-600 dark:text-green-400 rounded-2xl border border-green-500/10 animate-in fade-in slide-in-from-top-2">
+          <CheckCircle2 size={18} className="shrink-0" />
+          <span className="font-medium">Product successfully added to catalog.</span>
         </div>
       )}
 
-      <div className="space-y-6">
-        {/* Image Upload */}
-        <div className="space-y-3">
-          <label className="text-sm font-semibold text-zinc-700 dark:text-zinc-300">Product Image</label>
+      <div className="space-y-8">
+        {/* Section: Media */}
+        <div className="space-y-4">
+          <div className="flex items-center justify-between">
+            <label className="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-400">Visuals</label>
+            {preview && (
+              <button 
+                type="button" 
+                onClick={() => setPreview(null)}
+                className="text-[10px] font-bold text-destructive uppercase tracking-widest hover:underline"
+              >
+                Remove
+              </button>
+            )}
+          </div>
           <div className="relative group">
-            <div className={`aspect-video w-full rounded-xl border-2 border-dashed transition-all flex flex-col items-center justify-center overflow-hidden bg-zinc-50 dark:bg-zinc-800/50 ${
-              preview ? "border-zinc-300 dark:border-zinc-700" : "border-zinc-200 dark:border-zinc-800 hover:border-zinc-300 dark:hover:border-zinc-700"
+            <div className={`aspect-square sm:aspect-video w-full rounded-[2rem] border-2 border-dashed transition-all duration-500 flex flex-col items-center justify-center overflow-hidden ${
+              preview 
+                ? "border-primary/20 bg-muted/30" 
+                : "border-zinc-200 dark:border-zinc-800 bg-background/50 hover:border-primary/40 hover:bg-primary/5"
             }`}>
               {preview ? (
-                <img src={preview} alt="Preview" className="w-full h-full object-cover" />
+                <img src={preview} alt="Preview" className="w-full h-full object-cover animate-in fade-in zoom-in-95 duration-500" />
               ) : (
-                <>
-                  <Upload className="w-8 h-8 text-zinc-400 mb-2" />
-                  <span className="text-sm text-zinc-500 font-medium">Click to upload image</span>
-                </>
+                <div className="flex flex-col items-center p-8 text-center">
+                  <div className="w-16 h-16 rounded-3xl bg-primary/5 flex items-center justify-center text-primary mb-4 group-hover:scale-110 transition-transform duration-500">
+                    <Upload size={24} />
+                  </div>
+                  <span className="text-sm text-foreground font-bold mb-1">Click to upload product image</span>
+                  <p className="text-xs text-muted-foreground font-medium">High resolution PNG or JPG preferred</p>
+                </div>
               )}
               <input
                 type="file"
@@ -120,100 +138,115 @@ export default function AddProductForm() {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="space-y-2">
-            <label htmlFor="name" className="text-sm font-semibold text-zinc-700 dark:text-zinc-300">Product Name</label>
-            <input
-              id="name"
-              name="name"
-              type="text"
-              required
-              placeholder="Product name"
-              className="w-full px-4 py-2.5 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 focus:ring-2 focus:ring-zinc-900 dark:focus:ring-zinc-50 outline-hidden transition-all text-sm"
-            />
-          </div>
+        {/* Section: Basic Info */}
+        <div className="space-y-6">
+          <label className="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-400">Basic Information</label>
+          <div className="grid grid-cols-1 gap-6">
+            <div className="space-y-2.5">
+              <label htmlFor="name" className="text-xs font-bold text-foreground ml-1">Product Name</label>
+              <Input
+                id="name"
+                name="name"
+                type="text"
+                required
+                placeholder="e.g. Midnight Opal Eau de Parfum"
+                className="h-14 rounded-2xl px-5 bg-background/50 border-zinc-200 dark:border-zinc-800 focus:ring-primary/20 transition-all font-medium"
+              />
+            </div>
 
-          <div className="space-y-2">
-            <label htmlFor="category_id" className="text-sm font-semibold text-zinc-700 dark:text-zinc-300">Category</label>
-            <select
-              id="category_id"
-              name="category_id"
-              required
-              className="w-full px-4 py-2.5 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 focus:ring-2 focus:ring-zinc-900 dark:focus:ring-zinc-50 outline-hidden transition-all text-sm appearance-none"
-            >
-              <option value="">Select Category</option>
-              {categories.map((cat) => (
-                <option key={cat.id} value={cat.id}>{cat.name}</option>
-              ))}
-            </select>
-          </div>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="space-y-2">
-            <label htmlFor="price" className="text-sm font-semibold text-zinc-700 dark:text-zinc-300">Price ($)</label>
-            <input
-              id="price"
-              name="price"
-              type="number"
-              step="0.01"
-              required
-              placeholder="0.00"
-              className="w-full px-4 py-2.5 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 focus:ring-2 focus:ring-zinc-900 dark:focus:ring-zinc-50 outline-hidden transition-all text-sm"
-            />
-          </div>
-
-          <div className="space-y-2">
-            <label htmlFor="stock" className="text-sm font-semibold text-zinc-700 dark:text-zinc-300">Stock</label>
-            <input
-              id="stock"
-              name="stock"
-              type="number"
-              required
-              placeholder="0"
-              className="w-full px-4 py-2.5 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 focus:ring-2 focus:ring-zinc-900 dark:focus:ring-zinc-50 outline-hidden transition-all text-sm"
-            />
+            <div className="space-y-2.5">
+              <label htmlFor="category_id" className="text-xs font-bold text-foreground ml-1">Category</label>
+              <div className="relative">
+                <select
+                  id="category_id"
+                  name="category_id"
+                  required
+                  className="w-full h-14 pl-5 pr-12 rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-background/50 focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all text-sm font-medium appearance-none cursor-pointer"
+                >
+                  <option value="">Select Category</option>
+                  {categories.map((cat) => (
+                    <option key={cat.id} value={cat.id}>{cat.name}</option>
+                  ))}
+                </select>
+                <div className="absolute right-5 top-1/2 -translate-y-1/2 pointer-events-none text-muted-foreground">
+                  <Plus size={16} />
+                </div>
+              </div>
+            </div>
           </div>
         </div>
 
-        <div className="space-y-2">
-          <label className="text-sm font-semibold text-zinc-700 dark:text-zinc-300">Status</label>
-          <div className="flex gap-2">
+        {/* Section: Inventory & Pricing */}
+        <div className="space-y-6">
+          <label className="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-400">Inventory & Pricing</label>
+          <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-2.5">
+              <label htmlFor="price" className="text-xs font-bold text-foreground ml-1">Price ($)</label>
+              <Input
+                id="price"
+                name="price"
+                type="number"
+                step="0.01"
+                required
+                placeholder="0.00"
+                className="h-14 rounded-2xl px-5 bg-background/50 border-zinc-200 dark:border-zinc-800 focus:ring-primary/20 transition-all font-bold"
+              />
+            </div>
+
+            <div className="space-y-2.5">
+              <label htmlFor="stock" className="text-xs font-bold text-foreground ml-1">In Stock</label>
+              <Input
+                id="stock"
+                name="stock"
+                type="number"
+                required
+                placeholder="0"
+                className="h-14 rounded-2xl px-5 bg-background/50 border-zinc-200 dark:border-zinc-800 focus:ring-primary/20 transition-all font-bold"
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* Section: Status */}
+        <div className="space-y-4">
+          <label className="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-400">Publishing Status</label>
+          <div className="flex p-1.5 bg-muted/50 rounded-2xl border border-zinc-200 dark:border-zinc-800">
             <button
               type="button"
               onClick={() => setIsPublished(true)}
-              className={`flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl border text-xs font-bold uppercase transition-all ${
+              className={`flex-1 flex items-center justify-center gap-2 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all duration-300 ${
                 isPublished 
-                  ? "bg-zinc-900 text-white border-zinc-900 dark:bg-zinc-50 dark:text-zinc-900 dark:border-zinc-50" 
-                  : "bg-transparent text-zinc-500 border-zinc-200 dark:border-zinc-800"
+                  ? "bg-white dark:bg-zinc-900 text-primary shadow-sm ring-1 ring-zinc-200 dark:ring-zinc-800" 
+                  : "bg-transparent text-muted-foreground hover:text-foreground"
               }`}
             >
-              <Globe size={14} />
-              Live
+              <Globe size={14} className={isPublished ? "text-primary" : ""} />
+              Live Store
             </button>
             <button
               type="button"
               onClick={() => setIsPublished(false)}
-              className={`flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl border text-xs font-bold uppercase transition-all ${
+              className={`flex-1 flex items-center justify-center gap-2 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all duration-300 ${
                 !isPublished 
-                  ? "bg-zinc-900 text-white border-zinc-900 dark:bg-zinc-50 dark:text-zinc-900 dark:border-zinc-50" 
-                  : "bg-transparent text-zinc-500 border-zinc-200 dark:border-zinc-800"
+                  ? "bg-white dark:bg-zinc-900 text-foreground shadow-sm ring-1 ring-zinc-200 dark:ring-zinc-800" 
+                  : "bg-transparent text-muted-foreground hover:text-foreground"
               }`}
             >
               <Lock size={14} />
-              Draft
+              Draft Mode
             </button>
           </div>
         </div>
 
-        <div className="space-y-2">
-          <label htmlFor="description" className="text-sm font-semibold text-zinc-700 dark:text-zinc-300">Description</label>
-          <textarea
+        {/* Section: Detailed Description */}
+        <div className="space-y-4">
+          <label htmlFor="description" className="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-400">Product Narrative</label>
+          <Textarea
             id="description"
             name="description"
-            rows={3}
-            placeholder="Product description..."
-            className="w-full px-4 py-2.5 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 focus:ring-2 focus:ring-zinc-900 dark:focus:ring-zinc-50 outline-hidden transition-all text-sm resize-none"
+            rows={4}
+            placeholder="Describe the scent profile, top notes, and the story behind this fragrance..."
+            className="min-h-[160px] rounded-[2rem] p-6 bg-background/50 border-zinc-200 dark:border-zinc-800 focus:ring-primary/20 transition-all font-medium leading-relaxed resize-none"
           />
         </div>
       </div>
@@ -221,19 +254,22 @@ export default function AddProductForm() {
       <button
         type="submit"
         disabled={isPending}
-        className="w-full flex items-center justify-center gap-2 py-3 px-6 rounded-xl bg-zinc-900 dark:bg-zinc-50 text-zinc-50 dark:text-zinc-900 font-bold hover:bg-zinc-700 dark:hover:bg-zinc-200 disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-lg"
+        className="group relative w-full h-16 rounded-[2rem] bg-zinc-900 dark:bg-zinc-50 text-zinc-50 dark:text-zinc-900 font-black uppercase text-[11px] tracking-[0.3em] overflow-hidden transition-all hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:hover:scale-100 shadow-xl shadow-zinc-950/20"
       >
-        {isPending ? (
-          <>
-            <Loader2 className="animate-spin" size={20} />
-            Creating Product...
-          </>
-        ) : (
-          <>
-            <Plus size={20} />
-            Add Product
-          </>
-        )}
+        <div className="absolute inset-0 bg-primary/20 translate-y-full group-hover:translate-y-0 transition-transform duration-500" />
+        <div className="relative flex items-center justify-center gap-3">
+          {isPending ? (
+            <>
+              <Loader2 className="animate-spin" size={20} />
+              Processing...
+            </>
+          ) : (
+            <>
+              <Plus size={18} />
+              Create Product
+            </>
+          )}
+        </div>
       </button>
     </form>
   );

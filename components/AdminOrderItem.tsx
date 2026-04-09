@@ -64,17 +64,17 @@ export default function AdminOrderItem({ order }: AdminOrderItemProps) {
               <span className="text-[10px] font-black uppercase tracking-widest text-zinc-400">Order ID</span>
               <Link 
                 href={`/admin/orders/${order.id}`}
-                className="font-mono text-xs font-bold text-zinc-900 dark:text-zinc-50 hover:text-blue-600 transition-colors"
+                className="font-mono text-xs font-bold text-zinc-900 dark:text-zinc-50 hover:text-blue-600 transition-colors truncate max-w-[120px] sm:max-w-none"
               >
                 {order.id}
               </Link>
             </div>
-            <p className="text-sm text-zinc-500">
-              Placed on {format(new Date(order.created_at), 'PPP')} at {format(new Date(order.created_at), 'p')}
+            <p className="text-xs sm:text-sm text-zinc-500">
+              Placed {format(new Date(order.created_at), 'PPP')}
             </p>
           </div>
 
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 sm:gap-3">
             <Link 
               href={`/admin/orders/${order.id}`}
               className="p-2 rounded-lg bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-50 transition-all"
@@ -82,7 +82,7 @@ export default function AdminOrderItem({ order }: AdminOrderItemProps) {
             >
               <Eye size={16} />
             </Link>
-            <div className={`flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider ${getStatusColorClass(order.status)}`}>
+            <div className={`flex items-center gap-2 px-3 py-1.5 rounded-full text-[9px] sm:text-xs font-bold uppercase tracking-wider ${getStatusColorClass(order.status)}`}>
               {getStatusIcon(order.status)}
               {order.status}
             </div>
@@ -91,30 +91,31 @@ export default function AdminOrderItem({ order }: AdminOrderItemProps) {
               <button
                 onClick={handleStatusToggle}
                 disabled={isUpdating}
-                className="flex items-center gap-2 px-4 py-1.5 rounded-full bg-zinc-900 dark:bg-zinc-50 text-zinc-50 dark:text-zinc-900 text-[10px] font-black uppercase tracking-widest hover:opacity-90 transition-all disabled:opacity-50"
+                className="flex items-center justify-center gap-2 px-3 sm:px-4 py-1.5 rounded-full bg-zinc-900 dark:bg-zinc-50 text-zinc-50 dark:text-zinc-900 text-[9px] sm:text-[10px] font-black uppercase tracking-widest hover:opacity-90 transition-all disabled:opacity-50"
               >
                 {isUpdating ? (
                   <Loader2 className="h-3 w-3 animate-spin" />
                 ) : (
                   <Truck className="h-3 w-3" />
                 )}
-                Mark as {order.status === "sent" ? "Pending" : "Sent"}
+                <span className="hidden xs:inline">Mark {order.status === "sent" ? "Pending" : "Sent"}</span>
+                <span className="xs:hidden">{order.status === "sent" ? "P" : "S"}</span>
               </button>
             )}
           </div>
         </div>
 
-        <div className="mt-6 flex flex-col sm:flex-row sm:items-center justify-between gap-6 border-t border-zinc-100 dark:border-zinc-900 pt-6">
-          <div className="flex items-center gap-6">
+        <div className="mt-6 flex flex-row items-center justify-between gap-4 border-t border-zinc-100 dark:border-zinc-900 pt-6">
+          <div className="flex items-center gap-4 sm:gap-8">
             <div>
-              <p className="text-[10px] font-black uppercase tracking-widest text-zinc-400 mb-1">Total Amount</p>
-              <p className="text-xl font-black text-zinc-900 dark:text-zinc-50">
+              <p className="text-[9px] sm:text-[10px] font-black uppercase tracking-widest text-zinc-400 mb-0.5 sm:mb-1">Total</p>
+              <p className="text-lg sm:text-xl font-black text-zinc-900 dark:text-zinc-50 tracking-tighter sm:tracking-normal">
                 ${Number(order.total_amount).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
               </p>
             </div>
             <div>
-              <p className="text-[10px] font-black uppercase tracking-widest text-zinc-400 mb-1">Items</p>
-              <p className="text-xl font-black text-zinc-900 dark:text-zinc-50">
+              <p className="text-[9px] sm:text-[10px] font-black uppercase tracking-widest text-zinc-400 mb-0.5 sm:mb-1">Items</p>
+              <p className="text-lg sm:text-xl font-black text-zinc-900 dark:text-zinc-50">
                 {order.order_items?.length || 0}
               </p>
             </div>
@@ -122,13 +123,10 @@ export default function AdminOrderItem({ order }: AdminOrderItemProps) {
 
           <button 
             onClick={() => setIsExpanded(!isExpanded)}
-            className="flex items-center gap-2 text-xs font-bold text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-50 transition-colors"
+            className="flex items-center gap-2 text-[10px] sm:text-xs font-black uppercase tracking-widest text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-50 transition-colors"
           >
-            {isExpanded ? (
-              <>Hide Details <ChevronUp size={16} /></>
-            ) : (
-              <>View Items <ChevronDown size={16} /></>
-            )}
+            <span className="hidden sm:inline">{isExpanded ? 'Hide Details' : 'View Items'}</span>
+            {isExpanded ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
           </button>
         </div>
       </div>
