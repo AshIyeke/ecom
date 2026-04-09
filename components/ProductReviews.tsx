@@ -148,7 +148,7 @@ export default function ProductReviews({ productId }: ProductReviewsProps) {
                 placeholder="What did you like or dislike? How was the quality?"
                 value={comment}
                 onChange={(e) => setComment(e.target.value)}
-                className="min-h-[120px] bg-white dark:bg-zinc-950"
+                className="min-h-[120px] bg-background/50 border-border"
               />
               <Button 
                 type="submit" 
