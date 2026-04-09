@@ -6,6 +6,7 @@ import { notFound } from "next/navigation";
 import AddToCartButton from "@/components/AddToCartButton";
 import ProductReviews from "@/components/ProductReviews";
 import { getReviews } from "@/lib/supabase/queries/reviews";
+import { Review } from "@/types/review";
 
 export default async function ProductDetailPage({
   params,
@@ -16,7 +17,7 @@ export default async function ProductDetailPage({
   
   // Use slug as ID for fetching data
   let product;
-  let reviews = [];
+  let reviews: Review[] = [];
   try {
     product = await getProduct(slug);
     if (product) {
@@ -32,7 +33,7 @@ export default async function ProductDetailPage({
   }
 
   const averageRating = reviews.length > 0 
-    ? reviews.reduce((acc: number, curr: any) => acc + curr.rating, 0) / reviews.length 
+    ? reviews.reduce((acc: number, curr: Review) => acc + curr.rating, 0) / reviews.length 
     : 0;
 
   return (

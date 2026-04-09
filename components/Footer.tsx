@@ -55,7 +55,7 @@ export default function Footer() {
                 <Link href="/shop" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">All Fragrances</Link>
               </li>
               <li>
-                <Link href="#" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">New Arrivals</Link>
+                <Link href="/story" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">Our Story</Link>
               </li>
               <li>
                 <Link href="#" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">Best Sellers</Link>
@@ -80,7 +80,7 @@ export default function Footer() {
                 <Link href="#" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">FAQs</Link>
               </li>
               <li>
-                <Link href="#" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">Contact Us</Link>
+                <Link href="/contact" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">Contact Us</Link>
               </li>
             </ul>
           </div>

@@ -1,6 +1,6 @@
 import { createApi, fakeBaseQuery } from '@reduxjs/toolkit/query/react'
 import { getReviews, createReview, updateReview, deleteReview } from '@/lib/supabase/queries/reviews'
-import { Review } from '@/types/product'
+import { Review } from '@/types/review'
 
 export const reviewApi = createApi({
   reducerPath: 'reviewApi',

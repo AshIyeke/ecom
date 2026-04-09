@@ -31,8 +31,8 @@ export default function Navbar() {
         {/* Center: Navigation Links (Desktop Only) */}
         <div className="hidden lg:flex items-center space-x-10 absolute left-1/2 -translate-x-1/2">
           <Link href="/shop" className="text-[11px] font-black uppercase tracking-[0.2em] text-muted-foreground hover:text-foreground transition-colors">Shop</Link>
-          <Link href="#" className="text-[11px] font-black uppercase tracking-[0.2em] text-muted-foreground hover:text-foreground transition-colors">Story</Link>
-          <Link href="#" className="text-[11px] font-black uppercase tracking-[0.2em] text-muted-foreground hover:text-foreground transition-colors">Contact</Link>
+          <Link href="/story" className="text-[11px] font-black uppercase tracking-[0.2em] text-muted-foreground hover:text-foreground transition-colors">Story</Link>
+          <Link href="/contact" className="text-[11px] font-black uppercase tracking-[0.2em] text-muted-foreground hover:text-foreground transition-colors">Contact</Link>
         </div>
 
         {/* Right Side: Icons, Auth & Mobile Menu */}
@@ -96,10 +96,10 @@ export default function Navbar() {
           <Link href="/shop" onClick={() => setIsMenuOpen(false)} className="text-2xl font-serif tracking-tight text-foreground border-b border-border pb-4 flex justify-between items-center group">
             Shop <ChevronRight size={20} className="text-muted-foreground group-hover:translate-x-1 transition-transform" />
           </Link>
-          <Link href="#" onClick={() => setIsMenuOpen(false)} className="text-2xl font-serif tracking-tight text-foreground border-b border-border pb-4 flex justify-between items-center group">
+          <Link href="/story" onClick={() => setIsMenuOpen(false)} className="text-2xl font-serif tracking-tight text-foreground border-b border-border pb-4 flex justify-between items-center group">
             Story <ChevronRight size={20} className="text-muted-foreground group-hover:translate-x-1 transition-transform" />
           </Link>
-          <Link href="#" onClick={() => setIsMenuOpen(false)} className="text-2xl font-serif tracking-tight text-foreground border-b border-border pb-4 flex justify-between items-center group">
+          <Link href="/contact" onClick={() => setIsMenuOpen(false)} className="text-2xl font-serif tracking-tight text-foreground border-b border-border pb-4 flex justify-between items-center group">
             Contact <ChevronRight size={20} className="text-muted-foreground group-hover:translate-x-1 transition-transform" />
           </Link>
           

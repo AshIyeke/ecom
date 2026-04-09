@@ -1,8 +1,9 @@
 'use server'
 
 import { createClient } from "@/lib/supabase/server";
+import { Review } from "@/types/review";
 
-export async function getReviews(productId: string) {
+export async function getReviews(productId: string): Promise<Review[]> {
   try {
     const supabase = await createClient();
     const { data: reviews, error } = await supabase
@@ -23,7 +24,7 @@ export async function getReviews(productId: string) {
 
     if (profileError) {
       console.warn("[getReviews] Failed to fetch profiles:", profileError.message);
-      return reviews;
+      return reviews as Review[];
     }
 
     // Map profiles back to reviews
@@ -31,7 +32,7 @@ export async function getReviews(productId: string) {
     return reviews.map(r => ({
       ...r,
       profiles: profileMap.get(r.user_id) || null
-    }));
+    })) as Review[];
   } catch (error: any) {
     console.error(`[getReviews] Error for product ${productId}:`, error.message);
     throw new Error(`Failed to load reviews: ${error.message}`);
@@ -42,7 +43,7 @@ export async function createReview(reviewData: {
   product_id: string;
   rating: number;
   comment: string;
-}) {
+}): Promise<Review> {
   try {
     const supabase = await createClient();
     const { data: { user } } = await supabase.auth.getUser();
@@ -69,7 +70,7 @@ export async function createReview(reviewData: {
       .eq("id", user.id)
       .single();
 
-    return { ...review, profiles: profile };
+    return { ...review, profiles: profile } as Review;
   } catch (error: any) {
     console.error("[createReview] Error:", error.message);
     throw new Error(`Failed to create review: ${error.message}`);
@@ -79,7 +80,7 @@ export async function createReview(reviewData: {
 export async function updateReview(id: string, reviewData: {
   rating: number;
   comment: string;
-}) {
+}): Promise<Review> {
   try {
     const supabase = await createClient();
     const { data: { user } } = await supabase.auth.getUser();
@@ -103,14 +104,14 @@ export async function updateReview(id: string, reviewData: {
       .eq("id", user.id)
       .single();
 
-    return { ...review, profiles: profile };
+    return { ...review, profiles: profile } as Review;
   } catch (error: any) {
     console.error("[updateReview] Error:", error.message);
     throw new Error(`Failed to update review: ${error.message}`);
   }
 }
 
-export async function deleteReview(id: string) {
+export async function deleteReview(id: string): Promise<{ success: boolean }> {
   try {
     const supabase = await createClient();
     const { data: { user } } = await supabase.auth.getUser();
