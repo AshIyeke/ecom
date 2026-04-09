@@ -60,7 +60,7 @@ export default function Hero() {
         <div className="relative w-full aspect-square lg:aspect-auto lg:h-[85%] max-h-[800px] rounded-[3.5rem] overflow-hidden shadow-2xl animate-in fade-in zoom-in duration-1000">
           {/* Main Background Image */}
           <Image 
-            src="https://images.unsplash.com/photo-1594035910387-fea47794261f?auto=format&fit=crop&q=80&w=1200" 
+            src="https://i.pinimg.com/736x/24/08/df/2408df62224e8988c09f3fb5a5d4bb43.jpg" 
             alt="Opal Scents Fragrance Bottle"
             fill
             className="object-cover scale-105 hover:scale-100 transition-transform duration-1000"

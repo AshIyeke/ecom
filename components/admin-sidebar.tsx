@@ -1,6 +1,13 @@
-"use client"
+"use client";
 
-import { LayoutDashboard, ShoppingCart, Users, Settings, LogOut, Package } from "lucide-react"
+import {
+  LayoutDashboard,
+  ShoppingCart,
+  Users,
+  Settings,
+  LogOut,
+  Package,
+} from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
@@ -12,10 +19,10 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-} from "@/components/ui/sidebar"
-import { useAuth } from "@/store/AuthContext"
-import Link from "next/link"
-import { usePathname } from "next/navigation"
+} from "@/components/ui/sidebar";
+import { useAuth } from "@/store/AuthContext";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 const adminItems = [
   {
@@ -38,31 +45,41 @@ const adminItems = [
     url: "/admin/settings",
     icon: Settings,
   },
-]
+];
 
 export function AdminSidebar() {
-  const { user, signOut } = useAuth()
-  const pathname = usePathname()
+  const { user, signOut } = useAuth();
+  const pathname = usePathname();
 
   return (
-    <Sidebar>
-      <SidebarHeader className="border-b px-6 py-4">
-        <div className="flex flex-col">
-          <span className="text-lg font-bold">Admin Panel</span>
-          <span className="text-sm text-muted-foreground truncate">{user?.email}</span>
-        </div>
+    <Sidebar className="border-r border-border">
+      <SidebarHeader className="border-b border-border px-6 py-6 bg-secondary/30">
+        <Link href="/" className="flex flex-col items-start group">
+          <h2 className="text-xl font-serif tracking-[0.2em] font-light text-foreground uppercase">
+            Opal Scents
+          </h2>
+          <span className="text-[7px] tracking-[0.4em] font-black text-muted-foreground -mt-1 uppercase opacity-70">
+            Admin Panel
+          </span>
+        </Link>
       </SidebarHeader>
-      <SidebarContent>
+      <SidebarContent className="bg-background">
         <SidebarGroup>
-          <SidebarGroupLabel>Management</SidebarGroupLabel>
+          <SidebarGroupLabel className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground px-4 py-4">
+            Management
+          </SidebarGroupLabel>
           <SidebarGroupContent>
-            <SidebarMenu>
+            <SidebarMenu className="px-2">
               {adminItems.map((item) => (
                 <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild isActive={pathname === item.url}>
+                  <SidebarMenuButton
+                    asChild
+                    isActive={pathname === item.url}
+                    className="rounded-xl h-11 px-4 data-[active=true]:bg-primary data-[active=true]:text-primary-foreground transition-all"
+                  >
                     <Link href={item.url}>
                       <item.icon className="h-4 w-4" />
-                      <span>{item.title}</span>
+                      <span className="font-medium">{item.title}</span>
                     </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
@@ -71,19 +88,21 @@ export function AdminSidebar() {
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
-      <SidebarFooter className="border-t p-4">
+      <SidebarFooter className="border-t border-border p-4 bg-secondary/10">
         <SidebarMenu>
           <SidebarMenuItem>
-            <SidebarMenuButton 
+            <SidebarMenuButton
               onClick={() => signOut()}
-              className="text-red-500 hover:text-red-600 hover:bg-red-50"
+              className="text-destructive hover:text-destructive hover:bg-destructive/10 rounded-xl h-11 px-4 transition-all"
             >
               <LogOut className="h-4 w-4" />
-              <span>Logout</span>
+              <span className="font-bold uppercase tracking-widest text-[10px]">
+                Logout
+              </span>
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarFooter>
     </Sidebar>
-  )
+  );
 }

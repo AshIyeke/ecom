@@ -67,20 +67,20 @@ export default function ContactPage() {
               <ContactInfoItem
                 icon={<Mail className="text-muted-foreground" size={20} />}
                 title="Email Us"
-                content="concierge@opalscents.com"
+                content="@opalscents.com"
                 subtext="Expect a reply within 24 hours"
               />
               <ContactInfoItem
                 icon={<Phone className="text-muted-foreground" size={20} />}
                 title="Call Us"
-                content="+1 (555) 123-4567"
+                content="+234 814-306-6124 "
                 subtext="Mon-Fri from 9am to 6pm EST"
               />
               <ContactInfoItem
                 icon={<MapPin className="text-muted-foreground" size={20} />}
                 title="Our Studio"
-                content="123 Fragrance Lane, Scent District"
-                subtext="New York, NY 10001, USA"
+                content="123 Lekki Avenue, Scent District"
+                subtext="Lagos, Nigeria"
               />
               <ContactInfoItem
                 icon={<Clock className="text-muted-foreground" size={20} />}
@@ -185,7 +185,7 @@ export default function ContactPage() {
                     <Textarea
                       placeholder="Write your message here..."
                       required
-                      className="bg-background/50 border-border rounded-2xl min-h-[180px] p-5 text-sm font-medium transition-all focus:ring-2 focus:ring-primary/20 resize-none"
+                      className="min-h-[180px] resize-none"
                     />
                   </div>
 

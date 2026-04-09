@@ -3,12 +3,20 @@
 import { useAuth } from "@/store/AuthContext";
 import { useRouter, usePathname } from "next/navigation";
 import { useEffect } from "react";
-import { SidebarProvider, SidebarInset, SidebarTrigger } from "@/components/ui/sidebar";
+import {
+  SidebarProvider,
+  SidebarInset,
+  SidebarTrigger,
+} from "@/components/ui/sidebar";
 import { AdminSidebar } from "@/components/admin-sidebar";
 import { Separator } from "@/components/ui/separator";
 
-export default function AdminLayout({ children }: { children: React.ReactNode }) {
-  const { role, loading } = useAuth();
+export default function AdminLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  const { role, loading, user } = useAuth();
   const router = useRouter();
   const pathname = usePathname();
 
@@ -41,15 +49,30 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   return (
     <SidebarProvider>
       <AdminSidebar />
-      <SidebarInset>
-        <header className="flex h-16 shrink-0 items-center gap-2 border-b px-4">
-          <SidebarTrigger className="-ml-1" />
-          <Separator orientation="vertical" className="mr-2 h-4" />
+      <SidebarInset className="bg-background">
+        <header className="flex h-20 shrink-0 items-center gap-2 border-b border-border px-6 bg-background/50 backdrop-blur-md sticky top-0 z-10">
+          <SidebarTrigger className="-ml-1 text-primary hover:bg-secondary transition-colors" />
+          <Separator orientation="vertical" className="mr-4 h-6 opacity-20" />
           <div className="flex flex-1 items-center justify-between">
-            <h1 className="text-lg font-semibold">{getPageTitle()}</h1>
+            <h1 className="text-xl font-serif tracking-tight text-foreground">
+              {getPageTitle()}
+            </h1>
+            <div className="flex items-center gap-4">
+              <div className="hidden md:flex flex-col items-end">
+                <span className="text-xs font-bold uppercase tracking-widest text-foreground">
+                  {user?.email?.split("@")[0]}
+                </span>
+                <span className="text-[10px] font-black uppercase tracking-[0.2em] text-primary opacity-70">
+                  Administrator
+                </span>
+              </div>
+              <div className="w-10 h-10 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center text-primary font-bold">
+                {user?.email?.charAt(0).toUpperCase()}
+              </div>
+            </div>
           </div>
         </header>
-        <main className="flex-1 overflow-auto p-4 md:p-6">
+        <main className="flex-1 overflow-auto p-6 md:p-10 max-w-7xl mx-auto w-full">
           {children}
         </main>
       </SidebarInset>

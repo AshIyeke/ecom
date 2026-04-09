@@ -69,7 +69,7 @@ export default function FragranceShowcase() {
         <div className="relative group w-full aspect-[16/9] md:aspect-[21/9] overflow-hidden rounded-[2rem] shadow-2xl">
           {/* Main Visual: Perfume Bottle Placeholder */}
           <Image 
-            src="https://images.unsplash.com/photo-1541643600914-78b084683601?auto=format&fit=crop&q=80&w=2000" 
+            src="https://i.pinimg.com/1200x/a0/d6/df/a0d6df9736521398ea9d2f5906902417.jpg" 
             alt="Fragrance bottle on volcanic rock"
             fill
             className="object-cover brightness-90 transition-transform duration-700 group-hover:scale-105"
